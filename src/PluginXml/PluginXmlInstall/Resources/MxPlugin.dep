@@ -1,0 +1,3 @@
+#standard dependency specification for MxPluginXml - see http://docs.mxplugin.com/ - Reference Manual | MxPlugin Management | MxPlugin.dep
+%MXPLUGIN_ROOT%
+#end of file

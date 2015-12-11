@@ -1,0 +1,145 @@
+BuildNotes - MxUtils
+====================
+
+NOTE 1: Increment version: 1) resources, MxUtils.rc version  2) 1) resources, MxUtilsApp.rc version 
+		Increment the library number (B4ai) before creating a new external release (i.e. MxUtils1 becomes MxUtils2), also
+          change Lib name in MxUtilsApp (C2aii, C2bii) MxUtilsTest (D2aii, D2bii) and xUtils1Events.man - see ETWNotes.txt
+		  copy header files to create new versions with different names:  MxError1.h becomes MxError2.h, MxUtils1.h becomes MxUtils2.h, MxUtilsErrorCodes1.h becomes MxUtils2ErrorCodes.h and MxVersionInfo1.h becomes MxVersionInfo2.h
+		  update source files to use new headers
+NOTE 2: MxUtils*.lib is not generated unless you export at least one class - see steps 3,4,5
+NOTE 3: Set General | Platform Toolset for Release config of Projects MxUtils, MxUtilsApp Visual Studio 2012 - Windows XP (v110_xp)
+NOTE 4: See ETWNotes.txt for implementation of Event Tracing for Windows (ETW)
+NOTE 5: Resource compiler fails - BEGIN file not found
+		FIX: Close Visual Studio, open MxUtils.rc with notepad and then remove section immediately below #undef APSTUDIO_READONLY_SYMBOLS. Insert section described in ETWNotes 2.e.ii
+
+Setup Unit Tests
+	1. Set password used for Unit Testing
+		a. EncryptTest.cpp, TEST_METHOD_INITIALIZE(InitEncryptTest) - _SetupPassword = true;
+		b. EncryptTest.cpp,  TEST_METHOD(PasswordFileTest) - std::wstring val = L"Hello World"; //replace with valid password- i.e. xxxx
+		c. Run Tests - creates UnitTestPwd.txt
+		d. EncryptTest.cpp, TEST_METHOD_INITIALIZE(InitEncryptTest) - _SetupPassword = false;
+		e. EncryptTest.cpp,  TEST_METHOD(PasswordFileTest) - std::wstring val = L"xxxx"; //replace with L"Hello World";
+		f. Run Tests - Db tests read password from UnitTestPwd.txt
+
+
+A. Preparation
+==============
+1. Create a Visual Studio Blank Solution - MxUtils
+2. Create solution folder Docs: Select the root item in the Solution Explorer Window (Solution MxUtils), right click | Add, New Solution Folder; name = Docs
+3. Create BuildNotes.txt and add to Docs: select the Docs folder in the Solution Explorer Window, right click |  Add, New Item; select Text file and name it BuildNotes.txt (this file)
+4. Add InstallNotes.txt and add to Docs: select the Docs folder in the Solution Explorer Window, right click |  Add, Existing Item; select InstallNotes.txt 
+5. Create solution folder PublicInterfaces: select the root item in the Solution Explorer Window (Solution MxUtils), right click | Add, New Solution Folder; name = Public Interfaces
+6. Add Interface headers to PublicInterfaces: select the Public Interfaces folder in the Solution Explorer Window, right click |  Add, Existing Item; select $(SolutionDir)..\PublicInterfaces\IMxPluginBase.h, IMxPluginLibDetails.h, etc
+
+B. Create MxUtils 
+=========================
+1. Open MxUtils Visual Studio Solution (if it isn't already open)
+2. File | New Project - Other Languages, Visual C++, Win32 Console App
+	a. Name = MxUtils
+	b. Solution = Add to Solution
+	c. Welcome (next)
+	d. App Settings = Type is DLL, Export Symbols = Yes
+3. Edit Class CMxUtils (created with Project) 
+	b. Add Member Function const char *GetComment()	{ return "hello from MxUtils"; }
+	c. Rename as MxUtils (both .h and .cpp)
+4. Select Project in Solution Explorer Window, right click | Properties
+	a. Configuration  = Release
+		i.  General, TargetName = MxUtils1
+	b. Configuration  = Debug
+		i.  General, TargetName = MxUtils1D
+    c. Configuration = all
+		i.   C/C++, General, Addition Include Directories = $(SolutionDir)..\PublicInterfaces
+		ii.  Linker, input, additional dependencies - add Version.lib;
+		iii. Build Events, Post-build,
+			   xcopy /y "$(OutDir)$(TargetName).lib" "$(SolutionDir)..\ThirdPartyLibs\"
+
+C. Create MxUtilsApp
+============================
+1. File | New Project - Other Languages, Visual C++, Win32 Console App
+	a. Name = MxUtilsApp
+	b. Solution = Add to Solution
+	c. Welcome (next)
+	d. App Settings = Type is console app
+2. Select Project in Solution Explorer Window, right click | Properties
+	a. Configuration  = all Configurations
+		i. C/C++, General, Additional Include Directories = $(SolutionDir)MxUtils;$(SolutionDir)..\PublicInterfaces
+		ii. Linker, Input, Additional Dependencies = MxUtils1.lib	
+	b. Configuration  = Debug
+		i. Linker, General, Additional Library Directories = $(SolutionDir)Debug	
+		ii. Linker, Input, Additional Dependencies = MxUtils1D.lib			 
+	c. Configuration  = Release
+		i. Linker, General, Additional Library Directories = $(SolutionDir)Release	
+3. Select Project in Solution Explorer Window, right click | Project Dependencies
+	a. 	Depends upon MxUtils 
+4. Select Project in Solution Explorer Window, right click | Set as Startup Project
+5. Edit MxUtilsApp.cpp
+
+		#include "stdafx.h"
+		#include <stdlib.h>
+		#include <iostream>
+		#include <string>
+		#include "MxUtils1.h"
+
+
+		int main(int argc, char* argv[])
+		{
+			std::cout << "MxUtilsApp v1.0.0.0 - program starts" << std::endl;
+	
+			MxUtils lib;
+			std::cout << lib.GetComment();
+
+			std::cout << "MxUtilsApp - program ends" << std::endl;
+			return 0;
+		}
+
+D. Create MxUtilsTest
+=============================
+ 1. File | New Project - Other Languages, Visual C++, Test, Native Unit Test Project
+	a. Name = MxUtilsTest
+	b. Solution = Add to Solution
+2. Select Project in Solution Explorer Window, right click | Properties
+	a. Configuration  = all Configurations
+		i. C/C++, General, Additional Include Directories = $(SolutionDir)MxUtils;$(SolutionDir)..\PublicInterfaces
+		ii. Linker, Input, Additional Dependencies =MxUtils1.lib	
+	b. Configuration  = Debug
+		i. Linker, General, Additional Library Directories = $(SolutionDir)Debug	
+		ii. Linker, Input, Additional Dependencies = MxUtils1D.lib	 
+	c. Configuration  = Release
+		i. Linker, General, Additional Library Directories = $(SolutionDir)Release
+		ii. Linker, General, Incremental Linking :(/INCREMENTAL:NO)  (avoid LINK warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification)
+
+3. Select Project in Solution Explorer Window, right click | Project Dependencies
+	a. 	Depends upon MxUtils
+4. Rename Unittest1.cpp to MxUtilsTest.cpp and edit the file 
+
+#include "stdafx.h"
+#include "CppUnitTest.h"
+
+#include "MxUtils1.h"
+
+using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+namespace MxUtilsTest
+{		
+	TEST_CLASS(MxUtilsTest)
+	{
+	private:
+
+
+	public:
+		TEST_METHOD_INITIALIZE(InitPluginXmlTest)
+		{
+
+		}
+
+		TEST_METHOD_CLEANUP(DeinitPluginXmlTest)
+		{
+
+		}
+		
+		TEST_METHOD(CreateMxUtilsTest)
+		{
+
+		}
+	};
+}

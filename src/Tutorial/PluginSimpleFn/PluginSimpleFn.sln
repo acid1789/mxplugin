@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginSimpleFnApp", "PluginSimpleFnApp\PluginSimpleFnApp.vcxproj", "{CFC8F7ED-4BA9-4768-8444-69B67E9ADD28}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginSimpleFnLib", "PluginSimpleFnLib\PluginSimpleFnLib.vcxproj", "{964404B7-DAB3-4C97-9120-371BFBF2277D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublicInterfaces", "PublicInterfaces", "{CF4B0D12-EDF2-45CE-B0A1-60ACDD129276}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\PublicInterfaces\Tutorial\ISimpleFn.h = ..\..\PublicInterfaces\Tutorial\ISimpleFn.h
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = PluginSimpleFnApp\\PluginSimpleFnApp.vcxproj
+		SccProjectName1 = PluginSimpleFnApp
+		SccLocalPath1 = PluginSimpleFnApp
+		SccProjectUniqueName2 = PluginSimpleFnLib\\PluginSimpleFnLib.vcxproj
+		SccProjectName2 = PluginSimpleFnLib
+		SccLocalPath2 = PluginSimpleFnLib
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CFC8F7ED-4BA9-4768-8444-69B67E9ADD28}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CFC8F7ED-4BA9-4768-8444-69B67E9ADD28}.Debug|Win32.Build.0 = Debug|Win32
+		{CFC8F7ED-4BA9-4768-8444-69B67E9ADD28}.Release|Win32.ActiveCfg = Release|Win32
+		{CFC8F7ED-4BA9-4768-8444-69B67E9ADD28}.Release|Win32.Build.0 = Release|Win32
+		{964404B7-DAB3-4C97-9120-371BFBF2277D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{964404B7-DAB3-4C97-9120-371BFBF2277D}.Debug|Win32.Build.0 = Debug|Win32
+		{964404B7-DAB3-4C97-9120-371BFBF2277D}.Release|Win32.ActiveCfg = Release|Win32
+		{964404B7-DAB3-4C97-9120-371BFBF2277D}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

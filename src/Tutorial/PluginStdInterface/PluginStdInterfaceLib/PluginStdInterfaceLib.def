@@ -1,0 +1,7 @@
+LIBRARY   PLUGINSTDINTERFACELIB
+EXPORTS
+	CreateClassInstance   @1
+
+
+
+

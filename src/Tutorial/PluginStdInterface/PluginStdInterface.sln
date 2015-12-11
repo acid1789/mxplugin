@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginStdInterfaceApp", "PluginStdInterfaceApp\PluginStdInterfaceApp.vcxproj", "{1958AB55-A4BA-48C4-B9A7-F660EDC03465}"
+	ProjectSection(ProjectDependencies) = postProject
+		{69EA9B2A-C0C3-4F45-80DF-580F4C007F05} = {69EA9B2A-C0C3-4F45-80DF-580F4C007F05}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginStdInterfaceLib", "PluginStdInterfaceLib\PluginStdInterfaceLib.vcxproj", "{69EA9B2A-C0C3-4F45-80DF-580F4C007F05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{B6228630-084A-470B-A01F-E79A0BF89DB8}"
+	ProjectSection(SolutionItems) = preProject
+		BuildNotes.txt = BuildNotes.txt
+		..\..\MxPluginRules.txt = ..\..\MxPluginRules.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublicInterfaces", "PublicInterfaces", "{FE848A8B-1F35-48F7-BFF2-5FA522F18323}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\PublicInterfaces\IMxPluginBase.h = ..\..\PublicInterfaces\IMxPluginBase.h
+		..\..\PublicInterfaces\Tutorial\IPluginStdInterface.h = ..\..\PublicInterfaces\Tutorial\IPluginStdInterface.h
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = PluginStdInterfaceApp\\PluginStdInterfaceApp.vcxproj
+		SccProjectName1 = PluginStdInterfaceApp
+		SccLocalPath1 = PluginStdInterfaceApp
+		SccProjectUniqueName2 = PluginStdInterfaceLib\\PluginStdInterfaceLib.vcxproj
+		SccProjectName2 = PluginStdInterfaceLib
+		SccLocalPath2 = PluginStdInterfaceLib
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1958AB55-A4BA-48C4-B9A7-F660EDC03465}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1958AB55-A4BA-48C4-B9A7-F660EDC03465}.Debug|Win32.Build.0 = Debug|Win32
+		{1958AB55-A4BA-48C4-B9A7-F660EDC03465}.Release|Win32.ActiveCfg = Release|Win32
+		{1958AB55-A4BA-48C4-B9A7-F660EDC03465}.Release|Win32.Build.0 = Release|Win32
+		{69EA9B2A-C0C3-4F45-80DF-580F4C007F05}.Debug|Win32.ActiveCfg = Debug|Win32
+		{69EA9B2A-C0C3-4F45-80DF-580F4C007F05}.Debug|Win32.Build.0 = Debug|Win32
+		{69EA9B2A-C0C3-4F45-80DF-580F4C007F05}.Release|Win32.ActiveCfg = Release|Win32
+		{69EA9B2A-C0C3-4F45-80DF-580F4C007F05}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

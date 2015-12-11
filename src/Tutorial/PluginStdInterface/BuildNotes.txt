@@ -1,0 +1,235 @@
+BuildNotes - PluginStdInterfaceLib
+
+Naming Conventions
+==================
+- see PluginStdLib
+
+A. Preparation
+===========
+1. Create a Visual Studio Blank Solution - PluginStdInterface
+2. Use Windows Explorer to create the directory $(SolutionDir)..\PublicInterfaces (if it doesn't already exist)
+3. Copy IMxPluginBase.h into $(SolutionDir)..\PublicInterfaces (if it doesn't already exist) 
+4. Select the root item in the Solution Explorer Window (Solution PluginStdLib), right click | Add, New Solution Folder; name = Documents
+5. Select the Documents folder in the Solution Explorer Window, right click |  Add, New Item; select Text file and name it BuildNotes.txt (this file)
+6. Select the root item in the Solution Explorer Window (Solution PluginStdInterface), right click | Add, New Solution Folder; name = Public Interfaces
+7. Select the Public Interfaces folder in the Solution Explorer Window, right click |  Add, Existing Item; select $(SolutionDir)..\PublicInterfaces\IMxPluginBase.h
+
+B. Create PluginStdInterfaceLib
+=============================== 
+1. Open PluginStdLib Visual Studio Solution (if it isn't already open)
+2. File | New Project - Other Languages, Visual C++, Win32 Console App
+	a. Name = PluginStdInterfaceLib
+	b. Solution = Add to Solution
+	c. Welcome (next)
+	d. App Settings = Type is DLL, Export Symbols = Yes
+3. Add Class PluginStdInterfaceLib to PluginStdInterfaceLib.h (created with Project) 
+	a. Remove unwanted Exports
+	b. Add Member Function const char *PluginStdInterfaceLib::GetComment()	
+4. Select Project in Solution Explorer Window, right click | Properties
+5. Configuration  = all Configurations 
+	a. C/C++, Preprocessor, Preprocessor Definitions = PLUGINSTDINTERFACELIB_EXPORTS;
+	b. C/C++, General, Additional Include Directories = $(SolutionDir)..\PublicInterfaces
+
+NOTE: PluginStdInterfaceLib.lib is not generated unless you export at least one class - see steps 3,4,5
+
+
+C. Link to other Projects; PluginStdInterfaceApp, PluginStdInterfaceLibTest
+===========================================================================
+1. File | New Project - Other Languages, Visual C++, Win32 Console App
+	a. Name = PluginStdInterfaceApp
+	b. Solution = Add to Solution
+	c. Welcome (next)
+	d. App Settings = Type is console app
+2. Select Project in Solution Explorer Window, right click | Properties
+	a. Configuration  = all Configurations
+		i. C/C++, General, Additional Include Directories = $(SolutionDir)PluginStdInterfaceLib
+		ii. C/C++, General, Additional Include Directories = $(SolutionDir)..\..\PublicInterfaces
+		iii. Linker, Input, Additional Dependencies = PluginStdInterfaceLib.lib	
+	b. Configuration  = Debug
+		i. Linker, General, Additional Library Directories = $(SolutionDir)Debug	 
+	c. Configuration  = Release
+		i. Linker, General, Additional Library Directories = $(SolutionDir)Release	
+3. Select Project in Solution Explorer Window, right click | Project Dependencies
+	a. 	Depends upon PluginStdInterfaceLib 
+4. Select Project in Solution Explorer Window, right click | Set as Startup Project
+5. Edit PluginStdInterfaceApp.cpp
+	a. add 
+		#include <stdlib.h>
+		#include <iostream>
+		#include <string>
+		#include "PluginStdInterfaceLib.h"
+
+	b. add into main()
+
+		int _tmain(int argc, _TCHAR* argv[])
+		{	
+			std::cout << "PluginStdInterfaceApp v1.0.0.4\n\n";
+
+			PluginStdInterfaceLib *exemplar = new PluginStdInterfaceLib();
+
+			if (exemplar != '\0')
+			{
+				std::cout << exemplar->GetComment() << "\n";
+				delete exemplar;
+			}
+
+			std::cout << "program ends ok\n\n";
+			return 0;
+		}
+
+6. Build | Rebuild Solution
+7. Debug | Run without Debugging
+
+D. Create IPluginStdInterface interface
+=======================================
+1. Use Notepad to create IPluginStdInterface.h in the directory $(SolutionDir)..\PublicInterfaces
+2. Select the Public Interfaces folder in the Solution Explorer Window, right click |  Add, Existing Item; select $(SolutionDir)..\PublicInterfaces\IPluginStdInterface.h
+3. Edit IPluginStdInterface.h (use Tools | Create GUID to generate IPluginStdInterfaceLibGUID)
+
+		#include "..\IMxPluginBase.h"
+
+		static const GUID IPluginStdInterfaceLibGUID = { 0x3a8882ca, 0xcdec, 0x49e4, { 0x9c, 0xb0, 0x77, 0x1d, 0xb3, 0x3, 0x77, 0x9a } };  // {3A8882CA-CDEC-49E4-9CB0-771DB303779A}
+		class IPluginStdInterfaceLibIID
+		{
+		public:
+			static const GUID		  Guid() { return IPluginStdInterfaceLibGUID; }
+			static const char * const Name() { return "IMxPluginBase"; }
+		};
+
+		class IPluginStdInterfaceLib : public IMxPluginBase
+		{
+		public:
+		virtual const char *MXSTDMETHOD	GetComment() = 0; 
+
+		};
+
+4. Save MxPlugin\PublicInterfaces\Tutorial\IPluginStdInterface.h. Once published, IPluginStdInterface.h must never be changed.
+
+Note: IPluginStdInterface.h is saved in a location that is accessible to PluginStdInterfaceLib as well as any client program (Socket) that may use it 
+
+
+E. Implement the IPluginStdInterface and IMxPluginBase interfaces
+=================================================================
+
+1. Open PluginStdInterface.h (created in PluginStdInterfaceLib, see steps B.3) and add
+
+		#pragma once
+
+		#ifdef PLUGINSTDINTERFACELIB_EXPORTS
+		#define PLUGINSTDINTERFACELIB_API __declspec(dllexport)
+		#else
+		#define PLUGINSTDINTERFACELIB_API __declspec(dllimport)
+		#endif
+
+		#include "..\..\..\PublicInterfaces\Tutorial\IPluginStdInterface.h"
+
+		class PLUGINSTDINTERFACELIB_API PluginStdInterfaceLib : public IPluginStdInterfaceLib
+		{
+		public:
+			PluginStdInterfaceLib(void);
+			virtual ~PluginStdInterfaceLib(void);
+
+		//implementation of IMxPluginBase
+			virtual long MXSTDMETHOD DestroyPtr(void);
+			virtual long MXSTDMETHOD DuplicatePtr(void);
+			virtual void *MXSTDMETHOD Dynamic_cast(const GUID IId );
+			virtual const GUID MXSTDMETHOD GetInterfaceGUID(void) { return IPluginStdInterfaceLibIID::Guid(); }
+			virtual const char *MXSTDMETHOD GetInterfaceName(void) { return IPluginStdInterfaceLibIID::Name(); }
+
+		//implementation of IPluginStdInterfaceLib
+			virtual const char *MXSTDMETHOD GetComment() { return "PluginStdInterface::GetComment() is invoked"; } 
+
+		private:
+			long _refCnt;
+		};
+
+2. Edit PluginStdInterfaceLib.cpp (created in PluginStdInterfaceLib, see steps B.3)
+
+		#include "stdafx.h"
+		#include "PluginStdInterfaceLib.h"
+
+		PluginStdInterfaceLib::PluginStdInterfaceLib(void) : 
+			_refCnt(0)
+		{
+		}
+
+		PluginStdInterfaceLib::~PluginStdInterfaceLib(void)
+		{
+		}
+
+		long MXSTDMETHOD PluginStdInterfaceLib::DestroyPtr(void)
+		{
+			long cnt = InterlockedDecrement(&_refCnt);
+			if ( cnt == 0 )
+				delete this;
+			return cnt;
+		}
+
+		long MXSTDMETHOD PluginStdInterfaceLib::DuplicatePtr(void)
+		{
+			return InterlockedIncrement(&_refCnt);
+		}
+
+		void *MXSTDMETHOD PluginStdInterfaceLib::Dynamic_cast(const GUID IId)
+		{
+			void *rc = nullptr;
+
+			if ( MxGUID::IsEqual(IId, IPluginStdInterfaceLibIID::Guid()))
+				rc = static_cast<IPluginStdInterfaceLib *>(this);
+			else if ( MxGUID::IsEqual(IId, IMxPluginBaseIID::Guid()))
+				rc = static_cast<IMxPluginBase *>(this);
+			else
+				rc = nullptr;
+
+			if (rc != nullptr)
+				((IMxPluginBase *)rc)->DuplicatePtr();
+
+			return rc;
+		}
+
+F. Implement CreateClassInstance() 
+==================================
+
+1. Select PluginStdInterfaceLib Project in Solution Explorer Window, right click | Add - New Item Module Definition File (.DEF)
+	a. name = PluginStdInterfaceLib.def
+
+2. Add Exports to .DEF. This is required because MXSTDMETHOD is defined as  __stdcall rather than __declspec(dllexport) 
+
+		LIBRARY   PLUGINSTDINTERFACELIB
+		EXPORTS
+			CreateClassInstance   @1
+
+3. Add CreateClassInstance definition to PluginStdInterfaceLib.h 
+
+		extern "C" void  *MXSTDMETHOD CreateClassInstance(const GUID IId);
+	
+4. Add CreateClassInstance implementation to PluginStdInterfaceLib.cpp
+
+		void  *MXSTDMETHOD CreateClassInstance(const GUID IId)
+		{
+			void *rc = nullptr;
+
+			if ( MxGUID::IsEqual(IId, IPluginStdInterfaceLibIID::Guid()))
+				rc = new PluginStdInterfaceLib();
+			else if ( MxGUID::IsEqual(IId, IMxPluginBaseIID::Guid()))
+				rc = new PluginStdInterfaceLib();
+			else
+				rc = nullptr;
+
+			if (rc != nullptr)
+				((IMxPluginBase *)rc)->DuplicatePtr();
+
+			return rc;
+		}
+
+
+G. Use IPluginStdInterfaceLib from Client App (Socket)
+======================================================
+
+- see BuildNotes - Socket
+
+
+
+
+
+

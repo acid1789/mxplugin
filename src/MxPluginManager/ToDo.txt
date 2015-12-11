@@ -1,0 +1,24 @@
+1. Run PluginStdLib from ThirdPartyLibs\PluginStdLib
+   - search from root
+		- test root with no subfolders
+		- test root with more than one subfolder - PRODID_PluginXml 
+   - load only Plugins for Application 
+        - test - - PRODID_PluginICPsample
+
+2. Review MxPlugManagerErrorCodes - which ones require parent App to provide text String?
+
+3. Change IMxPluginLibDetails
+   - GetLastErrorNo()
+   - GetPluginProductID()
+   - SetSocket(SocketProductGUID, ReportLevel, ReportChannel) //ReportLevel, ReportChannel (outputdebugstr, etw) - get from app which reads reg at startup, 
+   - IsInterfaceSupported(IID)
+   - GetInterfaceCount()
+   - GetIID(index)
+
+4. Change MxError
+	- MX_SETUP has version const char * param - stored in MxError
+
+4. Replace IMxPluginLibDetailsIID,  IPluginXmlLibID, etc with MxProductID.h - ProdIdPluginXml
+
+5. Implement GUI
+   - outputdebugstr ???

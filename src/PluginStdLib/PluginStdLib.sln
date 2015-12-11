@@ -1,0 +1,77 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublicInterfaces", "PublicInterfaces", "{901DF21C-0962-47FA-A2CF-08057A6CFFE9}"
+	ProjectSection(SolutionItems) = preProject
+		..\PublicInterfaces\IMxPluginBase.h = ..\PublicInterfaces\IMxPluginBase.h
+		..\PublicInterfaces\IMxPluginLibDetails.h = ..\PublicInterfaces\IMxPluginLibDetails.h
+		..\PublicInterfaces\PluginStdLib\IPluginStdLib.h = ..\PublicInterfaces\PluginStdLib\IPluginStdLib.h
+		..\PublicInterfaces\MxUtils\LibInfo.h = ..\PublicInterfaces\MxUtils\LibInfo.h
+		..\PublicInterfaces\MxUtils\MxError1.h = ..\PublicInterfaces\MxUtils\MxError1.h
+		..\PublicInterfaces\MxProductID.h = ..\PublicInterfaces\MxProductID.h
+		..\PublicInterfaces\MxUtils\MxUtils1.h = ..\PublicInterfaces\MxUtils\MxUtils1.h
+		..\PublicInterfaces\MxUtils\MxVersionInfo1.h = ..\PublicInterfaces\MxUtils\MxVersionInfo1.h
+		..\PublicInterfaces\PluginStdLib\PluginStdLibErrorCodes.h = ..\PublicInterfaces\PluginStdLib\PluginStdLibErrorCodes.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{5ED175E4-8867-43F5-AA6E-00E133E96D6F}"
+	ProjectSection(SolutionItems) = preProject
+		BuildNotes.txt = BuildNotes.txt
+		..\InstallNotes.txt = ..\InstallNotes.txt
+		..\MxPlugin.dep = ..\MxPlugin.dep
+		..\MxPluginRules.txt = ..\MxPluginRules.txt
+		..\SolutionList.txt = ..\SolutionList.txt
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginStdDetailsLib", "PluginStdDetailsLib\PluginStdDetailsLib.vcxproj", "{E81537EA-F6E1-4394-A52C-EC88AF4C2882}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginStdDetailsApp", "PluginStdDetailsApp\PluginStdDetailsApp.vcxproj", "{7AF5EDD4-5261-4E6B-9FCA-62FFBBE893E3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E81537EA-F6E1-4394-A52C-EC88AF4C2882} = {E81537EA-F6E1-4394-A52C-EC88AF4C2882}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginStdDetailsLibTest", "PluginStdDetailsLibTest\PluginStdDetailsLibTest.vcxproj", "{8D37AC6E-3DAB-4309-AA26-E542C7681F5F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E81537EA-F6E1-4394-A52C-EC88AF4C2882} = {E81537EA-F6E1-4394-A52C-EC88AF4C2882}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = PluginStdDetailsLib\\PluginStdDetailsLib.vcxproj
+		SccProjectName1 = PluginStdDetailsLib
+		SccLocalPath1 = PluginStdDetailsLib
+		SccProjectUniqueName2 = PluginStdDetailsApp\\PluginStdDetailsApp.vcxproj
+		SccProjectName2 = PluginStdDetailsApp
+		SccLocalPath2 = PluginStdDetailsApp
+		SccProjectUniqueName3 = PluginStdDetailsLibTest\\PluginStdDetailsLibTest.vcxproj
+		SccProjectName3 = PluginStdDetailsLibTest
+		SccLocalPath3 = PluginStdDetailsLibTest
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E81537EA-F6E1-4394-A52C-EC88AF4C2882}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E81537EA-F6E1-4394-A52C-EC88AF4C2882}.Debug|Win32.Build.0 = Debug|Win32
+		{E81537EA-F6E1-4394-A52C-EC88AF4C2882}.Release|Win32.ActiveCfg = Release|Win32
+		{E81537EA-F6E1-4394-A52C-EC88AF4C2882}.Release|Win32.Build.0 = Release|Win32
+		{7AF5EDD4-5261-4E6B-9FCA-62FFBBE893E3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7AF5EDD4-5261-4E6B-9FCA-62FFBBE893E3}.Debug|Win32.Build.0 = Debug|Win32
+		{7AF5EDD4-5261-4E6B-9FCA-62FFBBE893E3}.Release|Win32.ActiveCfg = Release|Win32
+		{7AF5EDD4-5261-4E6B-9FCA-62FFBBE893E3}.Release|Win32.Build.0 = Release|Win32
+		{8D37AC6E-3DAB-4309-AA26-E542C7681F5F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8D37AC6E-3DAB-4309-AA26-E542C7681F5F}.Debug|Win32.Build.0 = Debug|Win32
+		{8D37AC6E-3DAB-4309-AA26-E542C7681F5F}.Release|Win32.ActiveCfg = Release|Win32
+		{8D37AC6E-3DAB-4309-AA26-E542C7681F5F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

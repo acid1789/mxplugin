@@ -1,0 +1,6 @@
+ToDo - PluginXml
+
+1. MxProductID - create abstract base classes for ProdIdApp* and ProdIdPlugin*
+(interface change - IMxPluginLibDetails.h - see MxPlugManager\Todo.txt)
+2. PluginXml - implement interface changes 
+3. Remove DefUniversalApp.h

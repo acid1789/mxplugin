@@ -1,0 +1,99 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{90637473-8A5F-4941-A9D9-0DF6646424A2}"
+	ProjectSection(SolutionItems) = preProject
+		BuildNotes.txt = BuildNotes.txt
+		..\InstallNotes.txt = ..\InstallNotes.txt
+		..\MxPluginRules.txt = ..\MxPluginRules.txt
+		..\SolutionList.txt = ..\SolutionList.txt
+		ToDo.txt = ToDo.txt
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MxPluginManager", "MxPluginManager\MxPluginManager.vcxproj", "{C71ADEB0-2EE6-41E3-96F1-83907F0F969D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MxPluginManagerApp", "MxPluginManagerApp\MxPluginManagerApp.vcxproj", "{5BCDF969-B7AB-489E-AD72-618910DA04AA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C71ADEB0-2EE6-41E3-96F1-83907F0F969D} = {C71ADEB0-2EE6-41E3-96F1-83907F0F969D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MxPluginManagerTest", "MxPluginManagerTest\MxPluginManagerTest.vcxproj", "{9816552F-8172-42E9-973B-134921721890}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C71ADEB0-2EE6-41E3-96F1-83907F0F969D} = {C71ADEB0-2EE6-41E3-96F1-83907F0F969D}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublicInterfaces", "PublicInterfaces", "{C04B22F2-4106-4ED4-BD51-CCAC142E5ED7}"
+	ProjectSection(SolutionItems) = preProject
+		..\PublicInterfaces\IMxPluginBase.h = ..\PublicInterfaces\IMxPluginBase.h
+		..\PublicInterfaces\IMxPluginLibDetails.h = ..\PublicInterfaces\IMxPluginLibDetails.h
+		..\PublicInterfaces\MxUtils\LibInfo.h = ..\PublicInterfaces\MxUtils\LibInfo.h
+		..\PublicInterfaces\MxUtils\MxError1.h = ..\PublicInterfaces\MxUtils\MxError1.h
+		..\PublicInterfaces\MxPluginManager\MxPluginLib1.h = ..\PublicInterfaces\MxPluginManager\MxPluginLib1.h
+		..\PublicInterfaces\MxPluginManager\MxPluginManager1.h = ..\PublicInterfaces\MxPluginManager\MxPluginManager1.h
+		..\PublicInterfaces\MxPluginManager\MxPluginManagerErrorCodes1.h = ..\PublicInterfaces\MxPluginManager\MxPluginManagerErrorCodes1.h
+		..\PublicInterfaces\MxProductID.h = ..\PublicInterfaces\MxProductID.h
+		..\PublicInterfaces\MxUtils\MxUtils1.h = ..\PublicInterfaces\MxUtils\MxUtils1.h
+		..\PublicInterfaces\MxUtils\MxVersionInfo1.h = ..\PublicInterfaces\MxUtils\MxVersionInfo1.h
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MxPluginManagerGUI", "MxPluginManagerGUI\MxPluginManagerGUI.vcxproj", "{BC3A119E-6EF6-4950-8D34-0E774B3CE371}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C71ADEB0-2EE6-41E3-96F1-83907F0F969D} = {C71ADEB0-2EE6-41E3-96F1-83907F0F969D}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Intel_SSA|Win32 = Intel_SSA|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C71ADEB0-2EE6-41E3-96F1-83907F0F969D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C71ADEB0-2EE6-41E3-96F1-83907F0F969D}.Debug|Win32.Build.0 = Debug|Win32
+		{C71ADEB0-2EE6-41E3-96F1-83907F0F969D}.Intel_SSA|Win32.ActiveCfg = Intel_SSA|Win32
+		{C71ADEB0-2EE6-41E3-96F1-83907F0F969D}.Intel_SSA|Win32.Build.0 = Intel_SSA|Win32
+		{C71ADEB0-2EE6-41E3-96F1-83907F0F969D}.Release|Win32.ActiveCfg = Release|Win32
+		{C71ADEB0-2EE6-41E3-96F1-83907F0F969D}.Release|Win32.Build.0 = Release|Win32
+		{5BCDF969-B7AB-489E-AD72-618910DA04AA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5BCDF969-B7AB-489E-AD72-618910DA04AA}.Debug|Win32.Build.0 = Debug|Win32
+		{5BCDF969-B7AB-489E-AD72-618910DA04AA}.Intel_SSA|Win32.ActiveCfg = Intel_SSA|Win32
+		{5BCDF969-B7AB-489E-AD72-618910DA04AA}.Intel_SSA|Win32.Build.0 = Intel_SSA|Win32
+		{5BCDF969-B7AB-489E-AD72-618910DA04AA}.Release|Win32.ActiveCfg = Release|Win32
+		{5BCDF969-B7AB-489E-AD72-618910DA04AA}.Release|Win32.Build.0 = Release|Win32
+		{9816552F-8172-42E9-973B-134921721890}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9816552F-8172-42E9-973B-134921721890}.Debug|Win32.Build.0 = Debug|Win32
+		{9816552F-8172-42E9-973B-134921721890}.Intel_SSA|Win32.ActiveCfg = Intel_SSA|Win32
+		{9816552F-8172-42E9-973B-134921721890}.Intel_SSA|Win32.Build.0 = Intel_SSA|Win32
+		{9816552F-8172-42E9-973B-134921721890}.Release|Win32.ActiveCfg = Release|Win32
+		{9816552F-8172-42E9-973B-134921721890}.Release|Win32.Build.0 = Release|Win32
+		{BC3A119E-6EF6-4950-8D34-0E774B3CE371}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BC3A119E-6EF6-4950-8D34-0E774B3CE371}.Debug|Win32.Build.0 = Debug|Win32
+		{BC3A119E-6EF6-4950-8D34-0E774B3CE371}.Intel_SSA|Win32.ActiveCfg = Release|Win32
+		{BC3A119E-6EF6-4950-8D34-0E774B3CE371}.Intel_SSA|Win32.Build.0 = Release|Win32
+		{BC3A119E-6EF6-4950-8D34-0E774B3CE371}.Release|Win32.ActiveCfg = Release|Win32
+		{BC3A119E-6EF6-4950-8D34-0E774B3CE371}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = MxPluginManager\\MxPluginManager.vcxproj
+		SccProjectName1 = MxPluginManager
+		SccLocalPath1 = MxPluginManager
+		SccProjectUniqueName2 = MxPluginManagerApp\\MxPluginManagerApp.vcxproj
+		SccProjectName2 = MxPluginManagerApp
+		SccLocalPath2 = MxPluginManagerApp
+		SccProjectUniqueName3 = MxPluginManagerTest\\MxPluginManagerTest.vcxproj
+		SccProjectName3 = MxPluginManagerTest
+		SccLocalPath3 = MxPluginManagerTest
+		SccProjectUniqueName4 = MxPluginManagerGUI\\MxPluginManagerGUI.vcxproj
+		SccProjectName4 = MxPluginManagerGUI
+		SccLocalPath4 = MxPluginManagerGUI
+	EndGlobalSection
+EndGlobal

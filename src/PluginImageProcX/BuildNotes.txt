@@ -1,0 +1,96 @@
+BuildNotes.txt - PluginImageProcX
+=================================
+
+PluginImageProcX builds upon (MxPlugin) PluginStdLib - see its BuildNotes.txt for instructions about building the initial library project (here PluginImageProcXLib)
+
+Naming Conventions
+==================
+
+Solutions: Plugin[product name][lib name] - i.e. PluginImageProcUKCTOCS
+
+Projects:
+	DLL:   Plugin[product name][lib name].dll - i.e. PluginImageProcUKCTOCS.dll  
+	App:   Plugin[product name][lib name]App.exe - i.e. PluginImageProcUKCTOCSApp.exe
+	Test:  Plugin[product name][lib name]Test.dll - i.e. PluginImageProcUKCTOCSTest.dll
+
+Interfaces: 
+	IMxPluginLibDetails		I[product name][lib name].h - i.e. IPluginImageProcUKCTOCS.h
+	(others)				I[product name][interface name].h - i.e. IPluginImageProcStep.h
+
+Classes: 	
+	CreateClassInstance + implementation of I[product name][lib name].h: [product name][lib name].h - i.e. PluginImageProcUKCTOCS.h, .cpp
+	(other interface implementation)								   : [product name][interface name].h -	i.e. PluginImageProcStep.h, .cpp
+	(support classes)												   : [class name].h - ImageProcSteps.h, .cpp
+	
+				
+Note: Project for DLL/Test may optionally have 'Lib' appended to the lib name - i.e. PluginImageProcUKCTOCSLib.dll, PluginImageProcUKCTOCSLibTest.dll
+
+A. Preparation
+--------------
+
+1. Copy DefSocketImageProcXGUI.h into  PublicInterfaces  - this file is created by the developer of the Socket Application (here SocketImageProcXGUI). It contains:
+		a. GUID that needs to be returned by IMxPluginLibDetails::GetSocketAppID() - tells the Socket Application that plugin was developed for it
+		b. (optional) interface provided by Socket Application
+
+
+B. Implement IMxPluginLibDetails by adding items to your library project
+------------------------------------------------------------------------
+
+1. Create PluginImageProcXLib class
+2. Create VS_VERISON_INFO and set globals used by PluginImageProcXLib in dllmain.cpp
+3. Add for all Configurations Linker, Input, Additional Dependencies - Version.lib
+
+C. Create a Project for your Socket App in order to test your library
+---------------------------------------------------------------------
+
+1. Create class MxPluginLib and implement IMxPluginLibDetails - i.e. adapt MxPluginLib.h and MxPluginLib.cpp
+2. Create class MxPluginLibs - a list of Plugins found in PluginRootFolder implementing IMxPluginLibDetails::GetSocketAppID() - i.e. adapt MxPluginLibs.h and MxPluginLibs.cpp 
+
+
+RULES
+=====
+
+1. Once an interface is published, it must never be changed. That is to say ISample.h can never be changed once it has been put into the Public Interfaces folder. If you need
+   to make changes then just create a new interface - i.e Sample2I.h
+
+2. Interfaces must:
+	a. only contain pure virtual functions with MXSTDMETHOD to define the calling convention
+			virtual long  MXSTDMETHOD DestroyPtr(void) = 0;
+	b. the input parameters and return values of these virtual functions must be 
+	     i.   PODs (plain old datatypes, like int, long, char *)
+		 ii.  Other interfaces (ISample)
+		 iii. Any Enumerations must contain a long (i.e. pad = 0xEFFFFFFF) so they cannot be optimised by the compiler to a shorter datatype (such optimisation depends on the compiler / vendor).
+
+3. Interfaces can inherit from only one interface. Multiple inheritance is not allowed as the binary representation of the resulting C++ abstract class depends on the compiler / vendor.
+	- see Essential COM (Don Box, 1998, Addison Wesley), 1st ed, 2nd printing, p52
+
+4.	All interfaces must inherit directly or indirectly from IMxPluginBase. 
+    Therefore, the following would be ok:
+
+	 a. class ISample : public IMxPluginBase
+	 b. class ISample2 : public ISample
+	 b. class ISample3 : public ISample2
+
+    The following are NOT ok:
+
+	 a. class ISample										//BAD: does not inherit from IMxPluginBase
+	 b. class ISample : public IMxPluginBase, ISample2		//BAD: multiple inheritance is not allowed
+
+5. Call DuplicatePtr() when copying an interface pointer - see Essential COM (Don Box, 1998, Addison Wesley), 1st ed, 2nd printing, p54
+
+6. Call DestroyPtr() when an interface pointer is no longer needed - see Essential COM (Don Box, 1998, Addison Wesley), 1st ed, 2nd printing, p54
+
+7. Do not overload methods defined in the interface - i.e. same member function name, but different argument list
+
+8. Any given DLL may contain the implementation of multiple interfaces, but it cannot have multiple implementations of the same interface. That is to say
+    PluginStdInterfaceLib.dll may implement the interfaces ISample and IMxPluginBase, but when its CreateClassInstance() is passed the IId of ISample 
+	("0ED26723-EB8F-44B7-B45E-7475BDE1E706") it will always create and return an object of class Sample in order to provide its implementation of ISample. Clearly,
+	it would make no sense to have another class in PluginStdInterfaceLib.dll like SampleXYZ that also implemented the interface ISample.
+	 
+	Note: Another DLL, say PluginNonStdInterfaceLib.dll, may implement the interface ISample with a different class such a SampleXYZ. The semantic properties of this object
+	will be the same as the object returned by PluginStdInterfaceLib's CreateClassInstance() because both objects implement the same ISample interface. However, their
+	contracts may be different. Therefore PluginStdInterfaceLib's GetComment() may return "Yes it does!" and PluginNonStdInterfaceLib's GetComment() may return "No it doesn't!"
+	This is really the point I'm trying to make here.
+
+
+

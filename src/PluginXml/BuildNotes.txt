@@ -1,0 +1,59 @@
+BuildNotes - PluginXml - Fascade around TinyXml
+
+Built in the same way as PluginStdLib - see its BuildNotes for details
+
+Common Problems
+===============
+
+PluginXMLGUI
+
+1. add $(SolutionDir)..\PublicInterfaces
+2. Copy MxPluginLib.cpp,.h and MxPluginLib.cpp,.h to $(ProjectDir) and add to project (from MxPlugin\PluginXml\PluginXmlGUI)
+3. add $(SolutionDir)..\PublicInterfaces
+
+PluginXMLTest
+
+Linker >> General >> Enable Incremental Linking :(/INCREMENTAL:NO) only in Release configuration to avoid LINK warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
+
+PluginXML
+
+Added source files from TinyXML 2.6.2 (1/11/2011)
+	tinyxml.h
+	tinyxml.cpp - Properties, C++, Precompiled Headers = Not Using Precompiled Headers
+	tinystr.h
+	tinystr.cpp - Properties, C++, Precompiled Headers = Not Using Precompiled Headers
+	tinyxmlparser.cpp - Properties, C++, Precompiled Headers = Not Using Precompiled Headers
+	tinyxmlerror.cpp - Properties, C++, Precompiled Headers = Not Using Precompiled Headers
+
+Exceptions
+==========
+must catch all exceptions
+
+Usage
+=====
+
+New - current doc is closed and new XML doc is created as current doc 
+Open - current doc is closed and an existing XML doc is opened from pathfilename as current doc
+SaveAs - saves current doc as pathfilename
+Save - saves current doc as pathfile of previous Open or SaveAs
+Close - (MUST BE DONE before terminating App) current doc is closed and no further operation can be performed except Open or New
+
+
+Additional Preparation to PluginStdLib
+======================================
+
+PluginXmlApp Pre-build Event - Debug 
+....................................
+
+xcopy /y "$(SolutionDir)..\MxPluginManager\Debug\MxPluginMngr1D.dll" "$(OutDir)" 
+
+
+PluginXmlApp Pre-build Event - Release 
+......................................
+
+xcopy /y "$(SolutionDir)..\MxPluginManager\Release\MxPluginMngr1.dll" "$(OutDir)" 
+
+PluginXmlApp  runtime - /Load=Runtime
+.....................................
+
+copy PluginXml.dll into PRODID_DefaultPluginRootFolder

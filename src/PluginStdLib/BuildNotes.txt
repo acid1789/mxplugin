@@ -1,0 +1,515 @@
+BuildNotes - PluginStdLib (documented here as PluginICPsample)
+
+Dependencies
+============
+Build MxUtils before building PluginICPsample 
+
+Changing Version
+================
+1. Increment values in VS_VERSION_INFO (major.minor.status.build) when changing major, minor or status
+		major = significant change in functionality, poss not compatible with previous major version number - i.e. user needs to change how he uses the product in some way
+		minor = small change in functionality, backwards compatible with previous version with same major version number
+		status = 0 - alpha code, 1 - beta code, 30 - release candidate zero, 31 - release candidate 1, etc
+		build = TFS change set (when a product is released externally create a TFS label with its version number)
+2. Change version number in PluginICPsampleErrorCodes.h
+3. Change unit test PluginICPsampleInfoTest
+
+Common Problems
+===============
+
+1. Forgetting to change the GUID when creating a new interface by copying from an existing file
+2. Forgetting to set a new GUID in VS_VERSION_INFO::InternalName - means your Plugin doesn't appear SocketImageProcXGUI's list of plugins supporting IMxPluginLibDetailsIID - see MxPlugLibs.cpp
+
+
+Naming Conventions
+==================
+
+Solutions: Plugin[product name][lib name] - i.e. PluginICPsample where IC (image curator) is product name and Psample is lib name (P = image curator processing lib, sample = name of processing lib)
+
+Projects:
+	DLL:   Plugin[product name][lib name].dll - i.e. PluginICPsample.dll  - (PluginStdDetailsLib breaks this convention by appending 'Lib')
+	App:   Plugin[product name][lib name]App.exe - i.e. PluginICPsampleApp.exe
+	Test:  Plugin[product name][lib name]Test.dll - i.e. PluginICPsampleTest.dll
+
+Interfaces: 
+	IMxPluginLibDetails		IPlugin[product name][lib name].h - i.e. IPluginICPsample.h
+	(others)				IPlugin[product name][interface name].h - i.e. IPluginICPprocSteps.h
+
+Classes: 	
+	CreateClassInstance + implementation of I[product name][lib name].h: [product name][lib name].h - i.e. PluginICPsample.h, .cpp
+	(other interface implementation)								   : [product name][interface name].h -	i.e. PluginICPprocSteps.h, .cpp
+	(support classes)												   : [class name].h - ImageProcSteps.h, .cpp
+	
+				
+A. Preparation
+==============
+1. Use Windows Explorer to create the directory $(SolutionDir)..\PublicInterfaces\PluginICPsample 
+2. Use Windows Explorer to create PluginICPsampleErrorCodes.h in $(SolutionDir)..\PublicInterfaces\PluginICPsample 
+3. Copy MxPluginBase.h, IMxPluginLibDetails.g, MxProductID.h and MxError1.h into $(SolutionDir)..\PublicInterfaces (if they don't already exist) 
+4. Use Visual Studio to create a blank Solution - name=PluginICPsample - Location=C:\Users\Will\Documents\Visual Studio 2012\Projects\Codeplex\mxplugin - create directory, add to source control
+5. Create solution folder Docs: Select the root item in the Solution Explorer Window (Solution PluginICPsample), right click | Add, New Solution Folder; name = Docs
+6. Create BuildNotes.txt and add to Docs: select the Docs folder in the Solution Explorer Window, right click |  Add, New Item; select Text file and name it BuildNotes.txt (this file)
+7. Add InstallNotes.txt, MxPluginRules.txt and SolutionList.txt to Docs: select the Docs folder in the Solution Explorer Window, right click |  Add, Existing Item; select Text file from MxPlugin root 
+8. Create solution folder PublicInterfaces: select the root item in the Solution Explorer Window (Solution PluginICPsample), right click | Add, New Solution Folder; name = Public Interfaces
+9. Add to PublicInterfaces (select the Public Interfaces folder in the Solution Explorer Window, right click |  Add, Existing Item):
+		$(SolutionDir)..\PublicInterfaces\IMxPluginBase.h
+		$(SolutionDir)..\PublicInterfaces\IMxPluginLibDetails.h
+		$(SolutionDir)..\PublicInterfaces\MxProductID.h
+		$(SolutionDir)..\PublicInterfaces\MxUtils\MxError1.h
+		$(SolutionDir)..\PublicInterfaces\MxUtils\MxUtils1.h
+		$(SolutionDir)..\PublicInterfaces\MxUtils\MxVersionInfo1.h
+		$(SolutionDir)..\PublicInterfaces\PluginICPsample\PluginICPsampleErrorCodes.h 
+10. Edit MxProductID.h and create a product GUID and associated class for PluginICPsample  in section 'MxPlugin libs - load at runtime'
+
+
+B. Create PluginICPsample 
+========================= 
+
+NOTE: PluginICPsample.lib is not generated unless you export at least one class - see steps 3
+
+1. Open PluginICPsample Visual Studio Solution (if it isn't already open)
+2. File | New Project - Other Languages, Visual C++, Win32 Console App
+	a. Name = PluginICPsample
+	b. Solution = Add to Solution
+	c. Welcome (next)
+	d. App Settings = Type is DLL, Export Symbols = Yes
+3. Edit Class CPluginICPsample (created with Project) 
+	a. Remove unwanted Exports - example of an exported variable, exported function (remove from .h and .cpp)
+	b. Rename as CPluginICPsample as PluginICPsample (both .h and .cpp)
+	c. Add PluginICPsampleMember Function: const char *GetComment()	{ return "hello from PluginICPsample"; }
+	d. Add to top of PluginICPsample.h - #pragma once
+4. Select Project in Solution Explorer Window, right click | Properties, 
+    a. Configuration  = all Configurations 
+		i.   C/C++, Preprocessor, Preprocessor Definitions = PLUGINICPSAMPLE_EXPORTS;
+		ii.  C/C++, General, Additional Include Directories = $(SolutionDir)..\PublicInterfaces
+		iii. Linker, General, Additional Library Directories = $(SolutionDir)..\ThirdPartyLibs
+		iv.  Linker, Input - module definition file = PluginICPsample.def
+5. Create PluginICPsample.def - select PluginICPsample Source Files folder, right-click | Add - New Item
+	 Visual C++, Code, Module Definition File, name=PluginICPsample.def
+
+	Note: This is required because MXSTDMETHOD is defined as  __stdcall rather than __declspec(dllexport) 
+
+6. Edit PluginICPsample.def
+
+	LIBRARY   PLUGINICPSAMPLE
+	EXPORTS
+		CreateClassInstance   @1
+
+
+C1. Create PluginICPsampleApp
+==================================
+1. File | New Project - Other Languages, Visual C++, Win32 Console App
+	a. Name = PluginICPsampleApp
+	b. Solution = Add to Solution
+	c. Welcome (next)
+	d. App Settings = Type is console app
+2. Select Project in Solution Explorer Window, right click | Properties
+	a. Configuration  = all Configurations
+		i.   C/C++, General, Additional Include Directories = $(SolutionDir)PluginICPsample;$(SolutionDir)..\PublicInterfaces
+		ii.  Linker, General, Additional Library Directories = $(SolutionDir)..\ThirdPartyLibs;
+		iii. Linker, Input, Additional Dependencies = PluginICPsample.lib	
+	b. Configuration  = Debug
+		i.    Linker, General, Additional Library Directories = $(SolutionDir)Debug; (goes after $(SolutionDir)..\ThirdPartyLibs)
+		ii.   Linker,  Input, Additional Dependencies = MxUtils1D.lib;	 
+		iii.  Build Events, Pre-Build Event - Command Line (click Edit in Dropdown list):
+				xcopy /y "$(SolutionDir)..\MxUtils\Debug\MxUtils1D.dll" "$(OutDir)"
+		iv./ Build Events, Pre-Build Events - Description: xcopy /y MxUtils1D.dll to $(OutDir)
+	c. Configuration  = Release
+		i.   Linker, General, Additional Library Directories = $(SolutionDir)Release; (goes after $(SolutionDir)..\ThirdPartyLibs)
+		ii.  Linker,  Input, Additional Dependencies = MxUtils1.lib;	 
+		iii.  Build Events, Pre-Build Event- Command Line (click Edit in Dropdown list):
+				xcopy /y "$(SolutionDir)..\MxUtils\Release\MxUtils1.dll" "$(OutDir)"
+		iv.   Build Events, Pre-Build Events - Description: xcopy /y MxUtils1.dll to $(OutDir)
+		v. Linker, General, Incremental Linking :(/INCREMENTAL:NO)  (avoid LINK warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification)
+
+3. Select Project in Solution Explorer Window, right click | Project Dependencies
+	a. 	Depends upon PluginICPsample 
+4. Select Project in Solution Explorer Window, right click | Set as Startup Project
+5. Implement PluginICPsampleApp.cpp 
+
+
+C2. Create PluginICPsampleTest
+===================================
+ 1. File | New Project - Other Languages, Visual C++, Test, Native Unit Test Project
+	a. Name = PluginICPsampleTest
+	b. Solution = Add to Solution
+2. Select Project in Solution Explorer Window, right click | Properties
+	a. Configuration  = all Configurations
+		i.   C/C++, General, Additional Include Directories = $(SolutionDir)PluginICPsample;$(SolutionDir)..\PublicInterfaces; (before existing)
+		ii.  Linker, General, Additional Library Directories = $(SolutionDir)..\ThirdPartyLibs;
+		iii. Linker, Input, Additional Dependencies = PluginICPsample.lib	
+	b. Configuration  = Debug
+		i.    Linker, General, Additional Library Directories = $(SolutionDir)Debug; (goes after $(SolutionDir)..\ThirdPartyLibs)
+		ii.   Linker,  Input, Additional Dependencies = MxUtils1D.lib;MxPluginMngr1D.lib;
+		iii.  Build Events, Pre-Build Event - Command Line (click Edit in Dropdown list):
+				xcopy /y "$(SolutionDir)..\MxUtils\Debug\MxUtils1D.dll" "$(OutDir)"
+		iv./ Build Events, Pre-Build Events - Description: xcopy /y MxUtils1D.dll to $(OutDir)		
+	c. Configuration  = Release
+		i. Linker, General, Additional Library Directories = $(SolutionDir)Release; (goes after $(SolutionDir)..\ThirdPartyLibs)
+		ii. Linker,  Input, Additional Dependencies = MxUtils1.lib;MxPluginMngr1.lib;	 
+		iii.  Build Events, Pre-Build Event- Command Line (click Edit in Dropdown list):
+				xcopy /y "$(SolutionDir)..\MxUtils\Release\MxUtils1.dll" "$(OutDir)"
+		iv.   Build Events, Pre-Build Events - Description: xcopy /y MxUtils1.dll to $(OutDir)
+		v. Linker, General, Incremental Linking :(/INCREMENTAL:NO)  (avoid LINK warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification)
+3. Select Project in Solution Explorer Window, right click | Project Dependencies
+	a. 	Depends upon PluginICPsample
+4. Rename Unittest1.cpp to PluginICPsampleTest.cpp and implement tests - see PluginStdDetailsLibTest.cpp
+5. Confirm all is well (both debug and release configuration)
+
+	a. Build | Rebuild Solution - no errors, no warnings
+
+	b. Debug | Run without Debugging - no errors, no warnings no leaks
+
+	c. Test | Windows | Test Explorer, Run All - all pass
+
+	d. Analyze | run Code Analysis on Solution - no analysis issues detected
+
+D. Create IPluginICPsample interface
+==========================================
+1. Use Notepad to create IPluginICPsample.h in the directory $(SolutionDir)..\PublicInterfaces\PluginICPsample
+2. Select the Public Interfaces folder in the Solution Explorer Window, right click |  Add, Existing Item; select $(SolutionDir)..\PublicInterfaces\PluginICPsample\IPluginICPsample.h
+3. Edit IPluginICPsample.h (use Tools | Create GUID for generating IPluginICPsampleGUID)
+
+	#include "IMxPluginLibDetails.h"
+
+	static const GUID IPluginICPsampleGUID = { 0xc4706f5a, 0x5305, 0x4be2, { 0xaa, 0x89, 0x97, 0x3c, 0xe1, 0xd0, 0xe8, 0xdc } };		// {C4706F5A-5305-4BE2-AA89-973CE1D0E8DC}
+	class IPluginICPsampleIID
+	{
+	public:
+		static const GUID Guid() { return IPluginICPsampleGUID; }
+		static const char * const Name() { return "IPluginICPsample"; }
+	};
+
+
+	class  IPluginICPsample : public IMxPluginLibDetails 
+	{
+	public:
+		virtual const char *MXSTDMETHOD GetComment(void) = 0;	
+
+	};
+
+4.	Save MxPlugin\PublicInterfaces\IPluginICPsample.h. Once published externally, IPluginICPsample.h must never be changed.
+	Note: IPluginICPsample.h is saved in a location that is accessible to PluginICPsample as well as any client program (Socket) that may use it 
+
+
+E. Implement the PluginICPsample, IMxPluginLibDetails and IMxPluginBase interfaces
+=======================================================================================
+
+1. Use Windows Explorer to copy LibInfo.h and LibInfo.cpp from PluginStdLib\PluginStdDetailsLib to PluginICPsample\PluginICPsample
+2. Use Visual Studio to add LibInfo.h and LibInfo.cpp to $(Solution)\PluginICPsample (header files and source files, respectively)
+3. Edit LibInfo.h and change to PLUGINSTDDETAILSLIB_API, PLUGINSTDDETAILSLIB_EXPORTS to PLUGINICPSAMPLE_API, PLUGINICPSAMPLE_EXPORTS
+4. Edit PluginICPsample.h (created in IPluginICPsample, see steps B.3) 
+
+#pragma once
+
+#include "MxProductID.h"
+#include "MxUtils\MxError1.h"
+
+#include "PluginICPsample\IPluginICPsample.h"
+#include "PluginICPsample\PluginICPsampleErrorCodes.h"
+
+#include "LibInfo.h"
+
+#ifdef PLUGINICPSAMPLE_EXPORTS
+#define PLUGINICPSAMPLE_API __declspec(dllexport)
+#else
+#define PLUGINICPSAMPLE_API __declspec(dllimport)
+#endif
+
+#pragma warning(disable:4275)
+class PLUGINICPSAMPLE_API  PluginICPsample : IPluginICPsample
+{
+#pragma warning(default:4275)
+
+public:
+	PluginICPsample(void);
+	virtual ~PluginICPsample(void);
+				//IMxPluginBase
+	virtual long   MXSTDMETHOD DestroyPtr(void);
+	virtual long   MXSTDMETHOD DuplicatePtr(void);
+	virtual void * MXSTDMETHOD Dynamic_cast(const GUID IId);
+	virtual const GUID   MXSTDMETHOD GetInterfaceGUID(void)  { return IPluginICPsampleIID::Guid(); }				//Library Interface GUID implemented by PluginICPsample.dll
+	virtual const char *MXSTDMETHOD GetInterfaceName(void) { return IPluginICPsampleIID::Name(); }				    //Library Interface Name implemented by PluginICPsample.dll
+				//IMxPluginLibDetails
+	virtual const char *MXSTDMETHOD GetLibName(void) { return LibInfo::Inst().GetProductName();	}				//VS_VERSION_INFO::ProductName
+	virtual const char *MXSTDMETHOD GetLibDescription(void) { return LibInfo::Inst().GetDescription(); }			//VS_VERSION_INFO::FileDescription
+	virtual const char *MXSTDMETHOD GetLibVersion(void) { return LibInfo::Inst().GetVersion(); }					//VS_VERSION_INFO::ProductVersion
+	virtual const char *MXSTDMETHOD GetLibOwnerName(void) { return LibInfo::Inst().GetOwner();	}				//VS_VERSION_INFO::CompanyName
+	virtual const char *MXSTDMETHOD GetLibCopyrightNotice(void) { return LibInfo::Inst().GetCopyrightNotice(); }	//VS_VERSION_INFO::LegalCopyright
+	virtual const char *MXSTDMETHOD GetLibID(void) { return LibInfo::Inst().GetProductID(); }					//VS_VERSION_INFO::InternalName GUID - same as its folder name in PluginRootFolder
+	virtual const char *MXSTDMETHOD GetLibSupportSite(void) { return "http://www.mxplugin.org";	}		
+	virtual const char *MXSTDMETHOD GetLibLicenseName(void) { return "New BSD Licence"; }								
+	virtual const char *MXSTDMETHOD GetLibLicenseURL(void)  { return "http://mxplugin.codeplex.com/license"; }	
+	virtual const wchar_t *MXSTDMETHOD GetLibPathFilename(void) { return LibInfo::Inst().GetwPathFilename(); }	//filename returned by ::GetModuleFileName() of hModule in DllMain, DLL_PROCESS_ATTACH	
+	virtual void		MXSTDMETHOD SetErrorOptions( MxError::Level ReportLevel, MxError::LogChannel ReportChannel) { MxError::Inst().Initialise(PRODID_PluginStdLib, LibInfo::Inst().GetProductName(), LibInfo::Inst().GetVersion(), ReportChannel, ReportLevel); }					//ReportLevel is MxError::Level, ReportChannel is MxError::LogChannel
+	virtual int			MXSTDMETHOD GetLastErrorNo() { return MxError::Inst().GetErrorCode(); }
+	virtual const char *MXSTDMETHOD GetLastErrorStr(){ return MxError::Inst().GetLastErrorStr(); }
+	virtual void		MXSTDMETHOD ErrorReset() { MxError::Inst().Reset(); }
+	virtual bool		MXSTDMETHOD IsErrorSet() { return MxError::Inst().IsErrorSet(); }
+
+	virtual const GUID	MXSTDMETHOD GetSocketID(void) { return SID_Universal; }									//GUID provided by ProductID.h - says this Plugin supports this application
+	virtual bool		MXSTDMETHOD IsInterfaceSupported(const GUID iid);
+	virtual int			MXSTDMETHOD GetInterfaceCount();
+	virtual const GUID	MXSTDMETHOD GetIID(int index);
+	virtual const char *MXSTDMETHOD GetISummary( const GUID  iid);
+	virtual const char *MXSTDMETHOD GetIDetails(const GUID  iid);
+				//IPluginICPsampleLib
+	virtual const char *MXSTDMETHOD GetComment(void) { return "hello from PluginICPsample"; }	
+private:
+	long _refCnt;
+
+};
+
+5. Edit PluginICPsample.cpp (created in PluginStdInterfaceLib, see steps B.3) 
+
+#include "stdafx.h"
+#include "PluginICPsample.h"
+
+PluginICPsample::PluginICPsample(void): 
+	_refCnt(0)
+{
+}
+
+PluginICPsample::~PluginICPsample(void)
+{
+}
+
+long MXSTDMETHOD PluginICPsample::DestroyPtr(void)
+{
+	long cnt = InterlockedDecrement(&_refCnt);
+	if ( cnt == 0 )
+		delete this;
+	return cnt;
+}
+
+long MXSTDMETHOD PluginICPsample::DuplicatePtr(void)
+{
+	return InterlockedIncrement(&_refCnt);
+}
+
+void *MXSTDMETHOD PluginICPsample::Dynamic_cast(const GUID IId)
+{
+	void *rc = nullptr;
+
+	if ( MxGUID::IsEqual(IId, IPluginICPsampleIID::Guid()))
+		rc = static_cast<IPluginICPsample *>(this);
+	else if ( MxGUID::IsEqual(IId, IMxPluginLibDetailsIID::Guid()))
+		rc = static_cast<IMxPluginLibDetails *>(this);
+	else if ( MxGUID::IsEqual(IId, IMxPluginBaseIID::Guid()))
+		rc = static_cast<IMxPluginBase *>(this);
+	else
+		rc = nullptr;
+	std::string tmp;
+	if (rc == nullptr)
+		MX_SETERROR(MX1802, MxError::Install, MxError::Abort, MxError::QuietReport, "Dynamic_cast does not support IID=%s", MxGUID::ConvertToString(IId, &tmp));
+	else
+		((IMxPluginBase *)rc)->DuplicatePtr();
+
+	return rc;
+}
+
+int			MXSTDMETHOD PluginICPsample::GetInterfaceCount()
+{ 
+	return 3; 
+}
+
+bool		MXSTDMETHOD PluginICPsample::IsInterfaceSupported(const GUID iid)
+{ 
+	bool rc = false;
+
+	if( MxGUID::IsEqual(iid, IPluginICPsampleIID::Guid()) )
+		rc = true;
+	else
+	{
+		if( MxGUID::IsEqual(iid, IMxPluginLibDetailsIID::Guid()) )
+			rc = true;
+		else
+		{
+			if( MxGUID::IsEqual(iid, IMxPluginBaseIID::Guid()) )
+				rc = true;
+		}
+	}
+	return rc;
+}
+
+
+const GUID	MXSTDMETHOD PluginICPsample::GetIID(int index) 
+{ 
+	GUID rc = GUID_Invalid;
+	switch (index)
+	{
+		case 0:
+			 rc = IPluginICPsampleIID::Guid();
+		break;
+		case 1:
+			rc = IMxPluginLibDetailsIID::Guid();
+		break;
+		case 2:
+			rc = IMxPluginBaseIID::Guid();
+		break;
+		default:
+		break;
+	}
+	return rc; 
+}
+
+const char *MXSTDMETHOD  PluginICPsample::GetISummary( const GUID  iid)
+{
+	const char *rc = "";
+
+	if( MxGUID::IsEqual(iid, IPluginICPsampleIID::Guid()) )
+		rc = "IPluginICPsample - sample implementation of Plugin for Image Curator";
+	else
+	{
+		if( MxGUID::IsEqual(iid, IMxPluginLibDetailsIID::Guid()) )
+			rc = "IMxPluginLibDetails - provides details about MxPlugin and its interfaces";
+		else
+		{
+			if( MxGUID::IsEqual(iid, IMxPluginBaseIID::Guid()) )
+				rc = "IMxPluginBase - base interface for Plugins (similar to COM IUnknown)";
+		}
+	}
+	return rc;
+}
+
+const char *MXSTDMETHOD  PluginICPsample::GetIDetails(const GUID  iid)
+{
+	const char *rc = "";
+
+	if( MxGUID::IsEqual(iid, IPluginICPsampleIID::Guid()) )
+		rc = "see IPluginICPsample.h for details about methods in this interface";
+	else
+	{
+		if( MxGUID::IsEqual(iid, IMxPluginLibDetailsIID::Guid()) )
+			rc = "see IMxPluginLibDetails.h for details about methods in this interface";
+		else
+		{
+			if( MxGUID::IsEqual(iid, IMxPluginBaseIID::Guid()) )
+				rc = "see IMxPluginBase.h for details about methods in this interface";
+		}
+	}
+	return rc;
+}
+
+3. Edit PluginICPsampleErrorCodes.h - copy content from PluginStdLibErrorCodes, but change error ranges as specified in MxProductID.h
+
+
+F. Implement CreateClassInstance() - see PluginICPsample.h, .cpp
+=====================================================================
+
+1. Add CreateClassInstance definition to PluginICPsample.h (above class def)
+
+	extern "C" void  *MXSTDMETHOD CreateClassInstance(const GUID IId);
+
+
+4. Add CreateClassInstance implementation to PluginICPsample.cpp
+
+void  *MXSTDMETHOD CreateClassInstance(const GUID IId)
+{
+	void *rc = nullptr;
+
+	if ( MxGUID::IsEqual(IId, IPluginICPsampleIID::Guid()))
+		rc = new PluginICPsample();
+	else if ( MxGUID::IsEqual(IId, IMxPluginLibDetailsIID::Guid()))
+		rc = new PluginICPsample();
+	else if ( MxGUID::IsEqual(IId, IMxPluginBaseIID::Guid()))
+		rc = new PluginICPsample();
+	else
+		rc = nullptr;
+
+	if (rc == nullptr)
+	{
+		std::string tmp;
+		MX_SETERROR(MX1801, MxError::Install, MxError::Abort, MxError::QuietReport, "CreateClassInstance, unsupported IID=%s", MxGUID::ConvertToString(IId, &tmp));
+	}
+	else
+		((IMxPluginBase *)rc)->DuplicatePtr();
+
+	return rc;
+}
+
+G. Provide Version Information
+==============================
+
+1. Select PluginICPsample Project in Resource View Window, right click | Add - Resource - Version, New
+	a. Use the Version Editor to provide values for:
+		FILEVERSION
+		PRODUCTVERSION
+		CompanyName - Developer of lib
+		FileDescription - Description of lib
+		InternalName - GUID to identify the lib - same as PRODID_PluginICPsample in MxProductID.h (different to any interface)
+		LegalCopyright - copyright message
+		OriginalFilename - PluginICPsample.dll
+		ProductName - PluginICPsample
+
+2. Select PluginICPsampleApp Project in Resource View Window, right click | Add - Resource - Version, New
+	a. Use the Version Editor to provide values for:
+		FILEVERSION
+		PRODUCTVERSION
+		CompanyName - Developer of lib
+		FileDescription - Description of lib
+		InternalName - GUID to identify the lib - same as PRODID_PluginICPsampleApp in MxProductID.h (different to any interface)
+		LegalCopyright - copyright message
+		OriginalFilename - PluginICPsample.dll
+		ProductName - PluginICPsample
+
+3. Select PluginICPsample Project in Solution Explorer Window, right click | Properties
+	a. Configuration  = Debug
+		i. Linker, Input, Additional Dependencies = Version.lib  (also needs MxUtils1*.lib - see 4bi, 4ci)
+	a. Configuration  = Release
+		i. Linker, Input, Additional Dependencies = Version.lib  (also needs MxUtils1*.lib - see 4bi, 4ci)
+
+4. Review class LibInfo - see E1,2,3
+
+5. Read Version information from DLL -
+
+	a. Edit dllmain.cpp
+
+		#include "stdafx.h"
+
+		#include "LibInfo.h"
+
+
+		BOOL APIENTRY DllMain( HMODULE hModule,
+							   DWORD  ul_reason_for_call,
+							   LPVOID lpReserved
+							 )
+		{
+			switch (ul_reason_for_call)
+			{
+				case DLL_PROCESS_ATTACH:
+				{
+					LibInfo::Inst().SetVersionInfo(hModule);
+				}
+				break;
+				case DLL_THREAD_ATTACH:
+				case DLL_THREAD_DETACH:
+				case DLL_PROCESS_DETACH:
+				break;
+			}
+			return TRUE;
+		}
+
+H. Confirm all is well
+======================
+
+	1. Repeat C2.5 to confirm all is well (both debug and release configuration)
+
+I. Complete Implementation
+==========================
+
+	1. Implement main() in PluginICPsampleApp.cpp (copy from PluginStdDetailsApp.cpp)
+	2. Implement unit tests (copy from PlugStdDetailsLibTest.cpp)
+	3. Repeat C2.5 to confirm all is well (both debug and release configuration)
+	4. check that files create above that are not in $(Solution) folder or is children have been added to source control
+
+J. Use IPluginICPsample from Client App (Socket)
+======================================================
+
+see InstallNotes.txt
+
+
+
+
+
+

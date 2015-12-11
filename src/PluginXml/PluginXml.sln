@@ -1,0 +1,151 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublicInterfaces", "PublicInterfaces", "{B69B83FB-8E2D-4058-A007-83CB5EA9D684}"
+	ProjectSection(SolutionItems) = preProject
+		..\PublicInterfaces\IMxPluginBase.h = ..\PublicInterfaces\IMxPluginBase.h
+		..\PublicInterfaces\IMxPluginLibDetails.h = ..\PublicInterfaces\IMxPluginLibDetails.h
+		..\PublicInterfaces\PluginXml\IPluginXmlAttribute.h = ..\PublicInterfaces\PluginXml\IPluginXmlAttribute.h
+		..\PublicInterfaces\PluginXml\IPluginXmlDoc.h = ..\PublicInterfaces\PluginXml\IPluginXmlDoc.h
+		..\PublicInterfaces\PluginXml\IPluginXmlElement.h = ..\PublicInterfaces\PluginXml\IPluginXmlElement.h
+		..\PublicInterfaces\PluginXml\IPluginXmlLib.h = ..\PublicInterfaces\PluginXml\IPluginXmlLib.h
+		..\PublicInterfaces\MxUtils\LibInfo.h = ..\PublicInterfaces\MxUtils\LibInfo.h
+		..\PublicInterfaces\MxUtils\MxError1.h = ..\PublicInterfaces\MxUtils\MxError1.h
+		..\PublicInterfaces\MxProductID.h = ..\PublicInterfaces\MxProductID.h
+		..\PublicInterfaces\MxUtils\MxUtils1.h = ..\PublicInterfaces\MxUtils\MxUtils1.h
+		..\PublicInterfaces\PluginXml\PluginXmlErrorCodes.h = ..\PublicInterfaces\PluginXml\PluginXmlErrorCodes.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{4E260426-64AF-428C-AE77-C793ACFF73FD}"
+	ProjectSection(SolutionItems) = preProject
+		BuildNotes.txt = BuildNotes.txt
+		..\InstallNotes.txt = ..\InstallNotes.txt
+		..\MxPluginRules.txt = ..\MxPluginRules.txt
+		..\SolutionList.txt = ..\SolutionList.txt
+		ToDo.txt = ToDo.txt
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginXmlApp", "MxPluginXmlApp\MxPluginXmlApp.vcxproj", "{B9392F79-B740-44F0-A4B5-0461087559B8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B} = {89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginXml", "MxPluginXml\MxPluginXml.vcxproj", "{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginXmlTest", "PluginXmlTest\PluginXmlTest.vcxproj", "{1751005B-3556-42A3-97A1-73163B4FC1DD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B} = {89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}
+	EndProjectSection
+EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "PluginXmlInstall", "PluginXmlInstall\PluginXmlInstall.wixproj", "{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B} = {89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}
+		{1751005B-3556-42A3-97A1-73163B4FC1DD} = {1751005B-3556-42A3-97A1-73163B4FC1DD}
+		{B9392F79-B740-44F0-A4B5-0461087559B8} = {B9392F79-B740-44F0-A4B5-0461087559B8}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
+		Debug|x86 = Debug|x86
+		Package|Mixed Platforms = Package|Mixed Platforms
+		Package|Win32 = Package|Win32
+		Package|x86 = Package|x86
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Debug|Win32.Build.0 = Debug|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Debug|x86.ActiveCfg = Debug|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Debug|x86.Build.0 = Debug|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Package|Mixed Platforms.ActiveCfg = Package|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Package|Win32.ActiveCfg = Package|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Package|Win32.Build.0 = Package|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Package|x86.ActiveCfg = Package|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Package|x86.Build.0 = Package|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Release|Win32.ActiveCfg = Release|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Release|Win32.Build.0 = Release|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Release|x86.ActiveCfg = Release|Win32
+		{B9392F79-B740-44F0-A4B5-0461087559B8}.Release|x86.Build.0 = Release|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Debug|Win32.Build.0 = Debug|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Debug|x86.ActiveCfg = Debug|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Debug|x86.Build.0 = Debug|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Package|Mixed Platforms.ActiveCfg = Package|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Package|Win32.ActiveCfg = Package|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Package|Win32.Build.0 = Package|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Package|x86.ActiveCfg = Package|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Package|x86.Build.0 = Package|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Release|Win32.ActiveCfg = Release|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Release|Win32.Build.0 = Release|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Release|x86.ActiveCfg = Release|Win32
+		{89FA7A1F-FA34-49B4-AEC8-C0EFEF93182B}.Release|x86.Build.0 = Release|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Debug|Win32.Build.0 = Debug|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Debug|x86.ActiveCfg = Debug|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Debug|x86.Build.0 = Debug|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Package|Mixed Platforms.ActiveCfg = Package|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Package|Win32.ActiveCfg = Package|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Package|Win32.Build.0 = Package|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Package|x86.ActiveCfg = Package|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Package|x86.Build.0 = Package|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Release|Win32.ActiveCfg = Release|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Release|Win32.Build.0 = Release|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Release|x86.ActiveCfg = Release|Win32
+		{1751005B-3556-42A3-97A1-73163B4FC1DD}.Release|x86.Build.0 = Release|Win32
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Debug|Win32.ActiveCfg = Debug|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Debug|Win32.Build.0 = Debug|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Debug|x86.ActiveCfg = Debug|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Debug|x86.Build.0 = Debug|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Package|Mixed Platforms.ActiveCfg = Release|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Package|Mixed Platforms.Build.0 = Release|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Package|Win32.ActiveCfg = Release|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Package|Win32.Build.0 = Release|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Package|x86.ActiveCfg = Release|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Package|x86.Build.0 = Release|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Release|Win32.ActiveCfg = Release|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Release|Win32.Build.0 = Release|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Release|x86.ActiveCfg = Release|x86
+		{94AD04D7-CEEF-4ED7-A00E-F32B3FBB5EBC}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = MxPluginXmlApp\\MxPluginXmlApp.vcxproj
+		SccProjectName1 = MxPluginXmlApp
+		SccLocalPath1 = MxPluginXmlApp
+		SccProjectUniqueName2 = MxPluginXml\\MxPluginXml.vcxproj
+		SccProjectName2 = MxPluginXml
+		SccLocalPath2 = MxPluginXml
+		SccProjectUniqueName3 = PluginXmlTest\\PluginXmlTest.vcxproj
+		SccProjectName3 = PluginXmlTest
+		SccLocalPath3 = PluginXmlTest
+		SccProjectUniqueName4 = PluginXmlInstall\\PluginXmlInstall.wixproj
+		SccProjectName4 = PluginXmlInstall
+		SccLocalPath4 = PluginXmlInstall
+	EndGlobalSection
+EndGlobal

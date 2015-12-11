@@ -1,0 +1,18 @@
+BuildNotes - Socket
+===================
+
+1. Select  PluginStdInterfaceLib Project in Solution Explorer Window, right click | Properties
+	a.	Set Configuration:	
+		i. Debug Build Events, Pre-Build Event
+			xcopy /y  "$(SolutionDir)..\PluginSimpleFn\Debug\PluginSimpleFnLib.dll" "$(OutDir)"
+			xcopy /y  "$(SolutionDir)..\PluginSimpleObj\Debug\PluginSimpleObjLib.dll" "$(OutDir)"
+			xcopy /y  "$(SolutionDir)..\PluginStdInterface\Debug\PluginStdInterfaceLib.dll" "$(OutDir)"
+	b.	Set Configuration:	
+		i. Release Build Events, Pre-Build Event
+			xcopy /y  "$(SolutionDir)..\PluginSimpleFn\Release\PluginSimpleFnLib.dll" "$(OutDir)"
+			xcopy /y  "$(SolutionDir)..\PluginSimpleObj\Release\PluginSimpleObjLib.dll" "$(OutDir)"
+			xcopy /y  "$(SolutionDir)..\PluginStdInterface\Release\PluginStdInterfaceLib.dll" "$(OutDir)"
+        ii. Release Linker, General - Enable Incremental Linking - NO
+
+
+

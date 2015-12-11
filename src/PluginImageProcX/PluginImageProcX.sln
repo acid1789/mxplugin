@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublicInterfaces", "PublicInterfaces", "{CE54751B-CA22-4CD5-A914-975CD70EB6A1}"
+	ProjectSection(SolutionItems) = preProject
+		..\PublicInterfaces\DefSocketImageProcXGUI.h = ..\PublicInterfaces\DefSocketImageProcXGUI.h
+		..\PublicInterfaces\IMxPluginBase.h = ..\PublicInterfaces\IMxPluginBase.h
+		..\PublicInterfaces\IMxPluginLibDetails.h = ..\PublicInterfaces\IMxPluginLibDetails.h
+		..\PublicInterfaces\IPluginImageProcXLib.h = ..\PublicInterfaces\IPluginImageProcXLib.h
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginImageProcXApp", "PluginImageProcXApp\PluginImageProcXApp.vcxproj", "{01D35066-88D1-4052-8D8A-DA8645DD9870}"
+	ProjectSection(ProjectDependencies) = postProject
+		{79E54193-090A-4E3E-9CDB-55B581790DC3} = {79E54193-090A-4E3E-9CDB-55B581790DC3}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginImageProcXLib", "PluginImageProcXLib\PluginImageProcXLib.vcxproj", "{79E54193-090A-4E3E-9CDB-55B581790DC3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SocketImageProcXGUI", "SocketImageProcXGUI\SocketImageProcXGUI.vcxproj", "{56BFE1AA-85B9-4EBB-926C-D29911019025}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{015E8AC2-81DE-473C-BB96-1F7578C65559}"
+	ProjectSection(SolutionItems) = preProject
+		BuildNotes.txt = BuildNotes.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = PluginImageProcXApp\\PluginImageProcXApp.vcxproj
+		SccProjectName1 = PluginImageProcXApp
+		SccLocalPath1 = PluginImageProcXApp
+		SccProjectUniqueName2 = PluginImageProcXLib\\PluginImageProcXLib.vcxproj
+		SccProjectName2 = PluginImageProcXLib
+		SccLocalPath2 = PluginImageProcXLib
+		SccProjectUniqueName3 = SocketImageProcXGUI\\SocketImageProcXGUI.vcxproj
+		SccProjectName3 = SocketImageProcXGUI
+		SccLocalPath3 = SocketImageProcXGUI
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01D35066-88D1-4052-8D8A-DA8645DD9870}.Debug|Win32.ActiveCfg = Debug|Win32
+		{01D35066-88D1-4052-8D8A-DA8645DD9870}.Debug|Win32.Build.0 = Debug|Win32
+		{01D35066-88D1-4052-8D8A-DA8645DD9870}.Release|Win32.ActiveCfg = Release|Win32
+		{01D35066-88D1-4052-8D8A-DA8645DD9870}.Release|Win32.Build.0 = Release|Win32
+		{79E54193-090A-4E3E-9CDB-55B581790DC3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{79E54193-090A-4E3E-9CDB-55B581790DC3}.Debug|Win32.Build.0 = Debug|Win32
+		{79E54193-090A-4E3E-9CDB-55B581790DC3}.Release|Win32.ActiveCfg = Release|Win32
+		{79E54193-090A-4E3E-9CDB-55B581790DC3}.Release|Win32.Build.0 = Release|Win32
+		{56BFE1AA-85B9-4EBB-926C-D29911019025}.Debug|Win32.ActiveCfg = Debug|Win32
+		{56BFE1AA-85B9-4EBB-926C-D29911019025}.Debug|Win32.Build.0 = Debug|Win32
+		{56BFE1AA-85B9-4EBB-926C-D29911019025}.Release|Win32.ActiveCfg = Release|Win32
+		{56BFE1AA-85B9-4EBB-926C-D29911019025}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

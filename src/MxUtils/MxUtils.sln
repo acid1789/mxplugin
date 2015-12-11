@@ -1,0 +1,91 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MxUtilsApp", "MxUtilsApp\MxUtilsApp.vcxproj", "{C07010B1-D9DD-4FB6-AA57-C92BF4E0ED3C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A01A127E-B4B3-48A1-9E10-2476222D60BA} = {A01A127E-B4B3-48A1-9E10-2476222D60BA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MxUtils", "MxUtils\MxUtils.vcxproj", "{A01A127E-B4B3-48A1-9E10-2476222D60BA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MxUtilsTest", "MxUtilsTest\MxUtilsTest.vcxproj", "{9F76DABC-E430-4343-AD32-37470B54FCB0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A01A127E-B4B3-48A1-9E10-2476222D60BA} = {A01A127E-B4B3-48A1-9E10-2476222D60BA}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{ADC450AA-4283-42D4-81DB-5916A305E715}"
+	ProjectSection(SolutionItems) = preProject
+		BuildNotes.txt = BuildNotes.txt
+		ETWNotes.txt = ETWNotes.txt
+		..\InstallNotes.txt = ..\InstallNotes.txt
+		..\SolutionList.txt = ..\SolutionList.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublicInterfaces", "PublicInterfaces", "{936FB3DE-43D4-4311-9090-F4A56AF0DAB9}"
+	ProjectSection(SolutionItems) = preProject
+		..\PublicInterfaces\IMxPluginBase.h = ..\PublicInterfaces\IMxPluginBase.h
+		..\PublicInterfaces\IMxPluginLibDetails.h = ..\PublicInterfaces\IMxPluginLibDetails.h
+		..\PublicInterfaces\MxUtils\LibInfo.h = ..\PublicInterfaces\MxUtils\LibInfo.h
+		..\PublicInterfaces\MxUtils\MxError1.h = ..\PublicInterfaces\MxUtils\MxError1.h
+		..\PublicInterfaces\MxProductID.h = ..\PublicInterfaces\MxProductID.h
+		..\PublicInterfaces\MxUtils\MxUtils1.h = ..\PublicInterfaces\MxUtils\MxUtils1.h
+		..\PublicInterfaces\MxUtils\MxUtilsErrorCodes1.h = ..\PublicInterfaces\MxUtils\MxUtilsErrorCodes1.h
+		..\PublicInterfaces\MxUtils\MxVersionInfo1.h = ..\PublicInterfaces\MxUtils\MxVersionInfo1.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventsManifests", "EventsManifests", "{9864D36B-FD0F-45D2-9214-783576802220}"
+	ProjectSection(SolutionItems) = preProject
+		MxUtils\eventman.xsd = MxUtils\eventman.xsd
+		MxUtils\MxUtils1Events.man = MxUtils\MxUtils1Events.man
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleEventLogs", "SampleEventLogs", "{2DB08EA1-F268-4DAD-B4C2-974C02BF31B0}"
+	ProjectSection(SolutionItems) = preProject
+		MxUtils\MxUtilsTrace_000003.etl = MxUtils\MxUtilsTrace_000003.etl
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4090C501-7452-41F1-A2D9-80EC1FA14C30}"
+	ProjectSection(SolutionItems) = preProject
+		..\CodeSigningCmd.txt = ..\CodeSigningCmd.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C07010B1-D9DD-4FB6-AA57-C92BF4E0ED3C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C07010B1-D9DD-4FB6-AA57-C92BF4E0ED3C}.Debug|Win32.Build.0 = Debug|Win32
+		{C07010B1-D9DD-4FB6-AA57-C92BF4E0ED3C}.Release|Win32.ActiveCfg = Release|Win32
+		{C07010B1-D9DD-4FB6-AA57-C92BF4E0ED3C}.Release|Win32.Build.0 = Release|Win32
+		{A01A127E-B4B3-48A1-9E10-2476222D60BA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A01A127E-B4B3-48A1-9E10-2476222D60BA}.Debug|Win32.Build.0 = Debug|Win32
+		{A01A127E-B4B3-48A1-9E10-2476222D60BA}.Release|Win32.ActiveCfg = Release|Win32
+		{A01A127E-B4B3-48A1-9E10-2476222D60BA}.Release|Win32.Build.0 = Release|Win32
+		{9F76DABC-E430-4343-AD32-37470B54FCB0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9F76DABC-E430-4343-AD32-37470B54FCB0}.Debug|Win32.Build.0 = Debug|Win32
+		{9F76DABC-E430-4343-AD32-37470B54FCB0}.Release|Win32.ActiveCfg = Release|Win32
+		{9F76DABC-E430-4343-AD32-37470B54FCB0}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs03
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = MxUtilsApp\\MxUtilsApp.vcxproj
+		SccProjectName1 = MxUtilsApp
+		SccLocalPath1 = MxUtilsApp
+		SccProjectUniqueName2 = MxUtils\\MxUtils.vcxproj
+		SccProjectName2 = MxUtils
+		SccLocalPath2 = MxUtils
+		SccProjectUniqueName3 = MxUtilsTest\\MxUtilsTest.vcxproj
+		SccProjectName3 = MxUtilsTest
+		SccLocalPath3 = MxUtilsTest
+	EndGlobalSection
+EndGlobal

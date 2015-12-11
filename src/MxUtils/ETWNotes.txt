@@ -1,0 +1,362 @@
+ETWNotes.txt - Implementation of Event Tracing for Windows
+----------------------------------------------------------
+
+Event Tracing for Windows support requires MxUtils1.dll (release) to be copied into the <MxRoot32>Common\Bin folder of the target computer - see InstallNotes for details. 
+If you do not want ETW logging of errors and log messages when LogChannel::Production is set, then there is no need to put MxUtils1.dll into <MxRoot32>Common\Bin or indeed
+follow any of the instructions given below. In this case any errors or log message will be ignored when LogChannel::Production is set (same as LogChannel::None). You 
+can also remove all functional code from EventTracing.cpp, .h - just keep the stubs so that you don't need to change any other code.
+
+The advantage of copying MxUtils1.dll into <MxRoot32>Common\Bin is that any application or Plugin that uses it will get ETW logging of errors and log messages when 
+LogChannel::Production is set. This is because the MxPlugin setup program adds this directory to the target computer's PATH system environment variable - see InstallNotes.
+
+If you want to put MxUtils1.dll into another directory then you must a) create your own .man file, say MxUtils1Special.man, setting the new location of MxUtils1.dll 
+and generating a new GUID  b) rebuild MxUtils to put the necessary resources and strings into MxUtils1.dll c) change your setup program to use the new GUID and 
+MxUtils1Special.man as well as adding the new directory to the target computer's PATH during install (or perform these steps manually) 
+
+Changing Library Name
+---------------------
+
+When the name of  MxUtils1.dll changes (ie  MxUtils2.dll) then take the following steps:
+
+1. Copy MxUtils1Events.man as MxUtils2Events.man and add to EventManifests folder (select, Add - Existing Item)
+2. Edit MxUtils2Events.man
+	1.a.i, 1.a.ii, 1.a.iii - new provider name, resource and messages .DLL name
+	generate new GUID
+3. Add MxUtils2Events.man to project
+    2.b - add file
+4. Change Pre-compile build step
+    2.c - compile MxUtils2Events.man
+5. Include the header and resource files that the compiler generates
+	2.e - add  MxUtils2Events.h and edit MxUtils.rc
+6. Register Provider and Trace (setup - install)
+	3.a. wevtutil im MxUtils2Events.man
+	3.b. wevtutil gp Maximodex-ETW-MxUtils2 /ge:true
+	3.c. logman create  trace MxUtilsTrace2 -p {...}  //use new GUID
+	3.d. logman start MxUtilsTrace2
+
+Common Problems
+---------------
+
+1. wevtutil im MxUtils1Events.man fails
+	access denied.
+
+	FIX: Run from command prompt with Admin rights
+
+2. wevtutil im MxUtils1Events.man fails
+    FIX: remove Channel element added to .man
+
+3. wevtutil gp Maximodex-ETW-MxUtils1 /ge:true returns
+	name: Maximodex-ETW-MxUtils1
+	guid: 86563644-640d-417e-ab6f-0f543b0428d9
+	Failed to get helpLink property. The specified image file did not contain a resource section.
+
+	FIX: The version of MxUtils1.dll created using  MxUtils1Events.man is not at the location specified in 
+	the element:
+		<provider ... resourceFileName="C:\Wills\MxUtils1.dll" messageFileName="C:\Wills\MxUtils1.dll">
+
+4. logman start MxUtilsTrace returns file already exists (or similar)
+    FIX: try again or delete the files in C:\PerfLogs\Admin
+
+5. Event Viewer doesn't show the events
+    FIX: logman stop MxUtilsTrace
+	Open Control Panel | Admin Tools | Event Viewer
+	Actions (Event viewer local) - right pane
+		Open Saved Log C:\PerfLogs\Admin\MxUtilsTrace_000001.etl (or similar)
+		Convert to New Format
+
+6. MxError and MxLog Event details not shown when reviewed on another PC
+	FIX: Install MxUtils1.dll into c:\Program Files(x86)\Maximodex\Common\Bin and run "wevtutil im MxUtils1Events.man"
+
+7. mc MxUtils1Events.man generates warning - eventman.xds not found
+	FIX: Copy eventman.xds from c:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include to <MxRootSDK>\MxUtils\MxUtils
+	
+NOTE: See the end of this file for more information about ETW.
+
+
+Implementation of ETW
+---------------------
+
+1. Write a manefest using the ECManGen.exe tool - see A - SaveAs MxUtils1Events.man
+
+  a. Create New Provider - Events Section | New | Provider - Maximodex-ETW-MxUtils1
+	  i.	Symbol - MxUtils1Lib_Events
+	  ii.   Resources -  c:\windows\system32\MxUtils1.dll
+	  iii.  Messages - c:\windows\system32\MxUtils1.dll
+	  iv.   guid={86563644-640d-417e-ab6f-0f543b0428d9}
+	  v.    (save)  
+  b. Create a new Task for Maximodex-ETW-MxUtils1
+	  i.   Name - MxEventTask
+      ii.  Symbol - MxEventTask
+	  iii. Guid - {4f592873-94e7-4467-8da7-cbf93d47bf2e} 
+	  iv.  Value - 1
+	  v.   Description - MX_SETERROR, MX_LOGMSG event handling
+  c. Create a new Opcode for Maximodex-ETW-MxUtils1
+      i.   Symbol - MxSetError
+	  ii.  Value - 10
+	  iii. Description - Setting Error Message	
+  d. Create a new Opcode for Maximodex-ETW-MxUtils1
+      i.   Symbol - MxLogMsg
+	  ii.  Value - 11
+	  iii. Description - Setting Log Message
+  e. Create a new Keyword for Maximodex-ETW-MxUtils1 (event category)
+      i.   Name - MxErrorKW
+	  ii.  Symbol - MxErrorEventKW
+	  iii. Value - 0
+	  iv.  Description - MX_SETERROR event
+  f. Create a new Keyword for Maximodex-ETW-MxUtils1 (event category)
+      i.   Name - MxLogKW
+	  ii.  Symbol - MxLogEventKW
+	  iii. Value - 00004000000000000
+	  iv.  Description - MX_LOGMSG event	
+  g. Create a new Template for Maximodex-ETW-MxUtils1
+      i.   Name - MxErrorStruct
+	  ii.  Attributes:
+	  		 Name - ProductName, InType - Win:AnsiString, OutType -xs:string
+			 Name - ProductID, InType - Win:AnsiString, OutType -xs:string
+			 Name - Version, InType - Win:AnsiString, OutType -xs:string
+			 Name - ProcessID, InType - Win:UInt32, OutType -xs:unsignedInt
+			 Name - ErrorCode, InType - Win:Int32, OutType -xs:Int
+			 Name - Category, InType - Win:Int32, OutType -xs:Int
+			 Name - Reset, InType - Win:Int32, OutType -xs:Int
+			 Name - ErrorMsg - Win:AnsiString, OutType -xs:string
+	  iii. Add - Single Item	
+  h. Create a new Template for Maximodex-ETW-MxUtils1
+      i.   Name - MxLogStruct
+	  ii.  Attributes:
+	  		 Name - ProductName, InType - Win:AnsiString, OutType -xs:string
+			 Name - ProductID, InType - Win:AnsiString, OutType -xs:string
+			 Name - Version, InType - Win:AnsiString, OutType -xs:string
+			 Name - ProcessID, InType - Win:UInt32, OutType -xs:unsignedInt
+			 Name - FunctionName - Win:AnsiString, OutType -xs:string
+			 Name - LineNo - InType - Win:Int32, OutType -xs:Int
+			 Name - Msg - Win:AnsiString, OutType -xs:string
+	  iii. Add - Single Item		      
+   i. Create a new Event for Maximodex-ETW-MxUtils1
+	  i.	Symbol - MxErrorEvent
+	  ii.   ID - 1
+	  iii.  Version - 1
+	  iv.   Description - handling for MX_SETERROR
+	  v.	Level - winError
+	  vi.	Task - MxEventTask
+	  vii.  OpCode - MxSetError
+	  viii. Template - MxErrorStruct
+	  ix.   Keyword - MxErrorKW
+   j. Create a new Event for Maximodex-ETW-MxUtils1
+	  i.	Symbol - MxLogEvent
+	  ii.   ID - 2
+	  iii.  Version - 1
+	  iv.   Description - handling for MX_LOGMSG
+	  v.	Level - winInformational
+	  vi.	Task - MxEventTask
+	  vii.  OpCode - MxLogMsg
+	  viii. Template - MxLogStruct
+	  ix.   Keyword - MxLogKW
+
+2. Adding Instrumentation Manifest MxUtils1Events.man to MxUtils and building it
+
+	a. Copy eventman.xds from c:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Include to <MxRootSDK>\MxUtils\MxUtils - this isn't always needed, but avoids warning
+	b. Add to Project - right click - Add Existing, MxUtils1Events.man
+	c. Add Build Event - MxUtils, right click - Properties, Build Event, Pre-Build Event (all configurations)
+		i.  command line: mc MxUtils1Events.man
+		ii. description: use the message compiler to validate the manifest and generate the resource and header files that you include in your provider
+	d. Build to generate MxUtils1Events.h, MxUtils1Events.rc, MxUtils1EventsTEMP.BIN, MSG00001.BIN
+	e. Include the header and resource files that the compiler generates in the project that contains the rest of your provider's source code
+		i.  Soln Explorer - select MxUtils\Header Files - right click - Add Existing - MxUtils1Events.h
+		ii. Close Visual Studio and manually edit MxUtils.rc adding immediately below #undef APSTUDIO_READONLY_SYMBOLS
+				LANGUAGE 0x9,0x1
+				1 11 "MSG00001.bin"
+				1 WEVT_TEMPLATE "MxUtils1EventsTEMP.BIN"
+    f. Implement code to write events in MxError.cpp - see EventTracing.cpp, .h
+
+3. Register Provider and Trace (setup - install) 
+ 
+   NOTE: Open Command Prompt with Admin Privaleges and change directory (cd) to Codeplex\mxplugin\MxUtils\MxUtils
+
+	a. wevtutil im MxUtils1Events.man
+	b. wevtutil gp Maximodex-ETW-MxUtils1 /ge:true
+		- see output below
+	c. logman create  trace MxUtilsTrace -p {86563644-640D-417E-AB6F-0F543B0428D9}
+	d. logman start MxUtilsTrace
+
+4. Run Program - MxUtilsApp.exe (make sure it loads MxUtils1.dll in the location specified in the .man file)
+
+5. Analysis of Log
+
+   NOTE: Open Command Prompt with Admin Privaleges and change directory (cd) to Codeplex\mxplugin\MxUtils\MxUtils
+
+    logman stop MxUtilsTrace
+	Open Control Panel | Admin Tools | Event Viewer
+	Actions (Event viewer local) - right pane
+		Open Saved Log C:\PerfLogs\Admin\MxUtilsTrace_000001.etl (or similar)
+		Convert to New Format
+
+5. UnRegister Provider and Trace (setup - remove)
+
+   NOTE: Open Command Prompt with Admin Privaleges and change directory (cd) to Codeplex\mxplugin\MxUtils\MxUtils
+
+	a. logman Delete MxUtilsTrace
+	b. wevtutil um MxUtils1Events.man
+
+
+	
+wevtutil gp Maximodex-ETW-MxUtils1 /ge:true
+------------------------------------------
+name: Maximodex-ETW-MxUtils1
+guid: 86563644-640d-417e-ab6f-0f543b0428d9
+helpLink:
+resourceFileName: C:\Wills\MxUtils1.dll
+messageFileName: C:\Wills\MxUtils1.dll
+message:
+channels:
+levels:
+  level:
+    name: win:Error
+    value: 2
+    message: 1342177282
+  level:
+    name: win:Informational
+    value: 4
+    message: 1342177284
+opcodes:
+  opcode:
+    name: MxSetError
+    value: 655360
+      task: 0
+      opcode: 10
+    message: 805306378
+  opcode:
+    name: MxLogMsg
+    value: 720896
+      task: 0
+      opcode: 11
+    message: 805306379
+tasks:
+  task:
+    name: MxEventTask
+    value: 1
+    eventGUID: 4f592873-94e7-4467-8da7-cbf93d47bf2e
+    message: 1879048193
+keywords:
+  keyword:
+    name: MxLogKW
+    mask: 400000000000
+    message: 268435503
+  keyword:
+    name: MxErrorKW
+    mask: 800000000000
+    message: 268435504
+events:
+  event:
+    value: 1
+    version: 1
+    opcode: 10
+    channel: 0
+    level: 2
+    task: 1
+    keywords: 0x800000000000
+    message: 2952855553
+  event:
+    value: 2
+    version: 1
+    opcode: 11
+    channel: 0
+    level: 4
+    task: 1
+    keywords: 0x400000000000
+    message: 2952855554
+
+
+Background
+----------
+
+Original development (Spike) - see \OCUDS-Spikes\ETWTest for more explaination about the manifest file content
+
+http://msdn.microsoft.com/en-us/library/aa964766(v=vs.85).aspx
+
+Events are typically used for troubleshooting application and driver software. Prior to Windows Vista, you would use either 
+Event Tracing for Windows (ETW) or Event Logging to log events. Windows Vista introduces a new eventing model that unifies 
+both the Event Tracing for Windows (ETW) and Windows Event Log API.
+
+The new model uses an XML manifest to define the events that you want to publish. Events can be published to a channel or an ETW session. 
+You can publish the events to the following types of channels: Admin, Operational, Analytic and Debug. If you use only ETW to enable the 
+publisher, you do not need to specify channels in your manifest. For complete details on writing a manifest, see Writing an Instrumentation
+ Manifest, and for information on channels, see Defining Channels. If you want to control the events that an event publisher publishes 
+at a finer level of granularity, use the ETW API.
+
+Publishing Events
+
+To register your event publisher and to publish events, you use the ETW API. For details, see Providing Events and Developing a Provider. 
+The event publisher will automatically write the events to the channels specified in the manifest if they are enabled.
+
+Consuming Events
+
+Consuming events involves retrieving the events from an event channel, an event log file (.evtx or .evt files), a trace file (.etl files), 
+or a real-time ETW session. To consume events from an ETW trace file or a real-time ETW session, use the trace data helper (TDH) functions 
+in ETW to consume the events. 
+
+A: Writing an Instrumentation Manifest
+======================================
+
+http://msdn.microsoft.com/en-us/library/dd996930(v=vs.85).aspx
+
+Applications and DLLs use an instrumentation manifest to identify their instrumentation providers and the events that the providers write. 
+A manifest is an XML file that contains the elements that identify your provider. The convention is to use .man as the extension for your 
+manifest. The manifest must conform to the event manifest XSD. For details on the schema, see EventManifest Schema.
+
+The ECManGen.exe tool uses a GUI that guides you through creating a manifest from scratch without ever having to use XML tags. 
+
+
+B: Compiling an Instrumentation Manifest
+========================================
+
+After writing your manifest, use the message compiler to validate the manifest and generate the resource and header files that you 
+include in your provider.
+
+Note: c parameter - If you are planning on using this parameter (technically everyone except MS should) then category definitions must be 
+in a seperate message file from the main messages otherwise the Message Compiler will generate invalid category IDs
+
+
+C: Writing Manifest-based Events
+================================
+
+http://msdn.microsoft.com/en-us/library/aa364162(v=vs.85).aspx
+
+1. Implement code in ETWTestApp.cpp
+
+2. Build
+
+3. Copy ETWTestApp.exe to c:\wills
+
+
+D: Register Provider and Trace
+==============================
+
+http://msdn.microsoft.com/en-us/library/aa364162(v=vs.85).aspx
+
+Before you can write events to a trace session, you must register your provider. Registering a provider tells ETW that your provider is ready to write events to a trace session. 
+
+E: Generate Trace
+=================
+
+logman start wpqsTrace
+
+run ETWTestApp.exe
+
+logman stop wpqsTrace  - you cannot analyse the log until this has been done
+
+F: Analyse Info
+===============
+
+copy C:\PerfLogs\Admin\wpqsTrace_000002.etl C:\Users\wills_000\Documents\Visual Studio 2012\Projects\OCUDS-Spikes\ETWTest\ETWTestApp
+tracerpt wpqsTrace_000001.etl 
+notepad summary.txt
+notepad dumpfile.xml
+
+
+D: UnRegister Provider
+======================
+
+logman Delete wpqsTrace
+
+wevtutil um ETWTestApp.man
+

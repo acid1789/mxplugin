@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+  <?define ISV="MxPluginTeam"?>
+  <?define ProdName="MxPluginXml"?>
+  <?define ProdVer="1.3.30.1"?>
+  <?define PluginGUID="{9E8E6865-D31E-40A2-B913-59BEBC11BC41}" ?>
+
+  <?define MxPluginISV="MxPluginTeam"?>
+  <?define MxPluginProdName="MxPlugin"?>
+  <?define MxPluginProdInstallDep="1"?> 
+
+  <Product Id="*" Name="$(var.ProdName) $(var.ProdVer)" Language="1033" Version="$(var.ProdVer)" Manufacturer="$(var.ISV)" UpgradeCode="41a3a87d-faa1-423e-a755-5b7398ef7b05"  >
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <UIRef Id="WixUI_Minimal"/>
+    <Property Id="WIXUI_INSTALLDIR" Value="dirBin" />
+    <WixVariable Id="WixUIDialogBmp" Value="Resources\Logo.jpg"/>
+    <WixVariable Id="WixUIBannerBmp" Value="Resources\Banner.jpg"/>
+    <WixVariable Id="WixUILicenseRtf" Value="Resources\License.rtf"/>
+
+    <Icon Id="iconInstall" SourceFile="Resources\MxPluginXml.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="iconInstall" />
+    <Property Id="ARPHELPLINK" Value="http://www.mxplugin.org/plugins/support/xml" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of $(var.ProdName) is already installed." />
+    <MediaTemplate EmbedCab="yes"/>
+
+    <Feature Id="featureMxPlugin" Title="$(var.ProdName)" Level="1">
+      <ComponentGroupRef Id="compgrpMxPlugin" />
+      <ComponentGroupRef Id="compgrpMxPluginSDK" />   
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="APPLICATIONFOLDER" Name="$(var.MxPluginISV)">
+          <Directory Id="dirRoot" Name="$(var.MxPluginProdName)">
+            <Directory Id="dirBin" Name="Bin">
+              <Directory Id="dirPlugin" Name="$(var.PluginGUID)" />
+            </Directory>
+            <Directory Id="dirSDK" Name="SDK">
+             <Directory Id="dirSDKInclude" Name="Include">
+                <Directory Id="dirSDKIncludePublicInterfaces" Name="PublicInterfaces">
+                  <Directory Id="dirSDKIncludePublicInterfacesPlugin" Name="$(var.PluginGUID)" />              
+                </Directory>            
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="compgrpMxPlugin" Directory="dirPlugin">
+      <Component Id="compMxPlugin" Guid="{322C871F-AA46-4F14-A500-A0A7C010B0AC}">
+        <File Source="..\..\PluginXml\Release\PluginXml.dll" />
+      </Component>
+      <Component Id="compMxPluginApp"  Guid="{F482F2F4-5EB6-462D-A559-B322A2BD113E}">
+        <File Source="..\..\PluginXml\Release\PluginXmlApp.exe" />
+      </Component>
+      <Component Id="compMxPluginDep"  Guid="{0FA1FFCD-5222-405B-84FE-A151B0B3A8A6}">
+        <File Source="Resources\MxPlugin.dep" />
+      </Component>
+    </ComponentGroup>
+  </Fragment> 
+  
+  <Fragment>
+    <ComponentGroup Id="compgrpMxPluginSDK" Directory="dirSDKIncludePublicInterfacesPlugin">
+      <Component Id="compMxPluginSDK" Guid="{E7513BA7-D5B1-476F-B728-64832BFD6938}" >
+        <File Source="..\..\PublicInterfaces\PluginXml\IPluginXmlAttribute.h" />
+        <File Source="..\..\PublicInterfaces\PluginXml\IPluginXmlDoc.h" />  
+        <File Source="..\..\PublicInterfaces\PluginXml\IPluginXmlElement.h" />  
+        <File Source="..\..\PublicInterfaces\PluginXml\IPluginXmlLib.h" />   
+        <File Source="..\..\PublicInterfaces\PluginXml\PluginXmlErrorCodes.h" />         
+      </Component>
+    </ComponentGroup>
+  </Fragment>  
+  
+</Wix>

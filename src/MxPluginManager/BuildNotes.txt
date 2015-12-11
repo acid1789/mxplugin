@@ -1,0 +1,271 @@
+BuildNotes = MxPluginManager
+
+NOTE 1: Increment version: 1) resources, MxPluginManager.rc version  2) 1) resources, MxPluginManagerApp.rc version
+			Increment the library number (B4ai) before creating a new external release (i.e. MxPluginMngr1 becomes MxPluginMngr2) 
+			and change Lib name in MxPluginManagerApp (C2aii, C2bii) and MxPluginManagerTest (D2aii, D2bii)
+
+NOTE 2: MxPluginMngr*.lib is not generated unless you export at least one class - see steps 3,4,5
+
+NOTE 3: Install MxUtils, PluginStdLib and MxPluginManager before running unit tests - see InstallNotes.txt
+
+
+
+A. Preparation
+==============
+1. Create a Visual Studio Blank Solution - MxPluginManager
+2. Create solution folder Docs: Select the root item in the Solution Explorer Window (Solution MxPluginManager), right click | Add, New Solution Folder; name = Docs
+3. Create BuildNotes.txt and add to Docs: select the Docs folder in the Solution Explorer Window, right click |  Add, New Item; select Text file and name it BuildNotes.txt (this file)
+4. Create DeployNotes.txt and add to Docs: select the Docs folder in the Solution Explorer Window, right click |  Add, New Item; select Text file and name it DeployNotes.txt 
+5. Create solution folder PublicInterfaces: select the root item in the Solution Explorer Window (Solution MxPluginManager), right click | Add, New Solution Folder; name = Public Interfaces
+6. Add Interface headers to PublicInterfaces: select the Public Interfaces folder in the Solution Explorer Window, right click |  Add, Existing Item; select $(SolutionDir)..\PublicInterfaces\IMxPluginBase.h, IMxPluginLibDetails.h, etc
+
+B. Create MxPluginManager 
+=========================
+1. Open MxPluginManager Visual Studio Solution (if it isn't already open)
+2. File | New Project - Other Languages, Visual C++, Win32 Console App
+	a. Name = MxPluginManager
+	b. Solution = Add to Solution
+	c. Welcome (next)
+	d. App Settings = Type is DLL, Export Symbols = Yes
+3. Edit Class CMxPluginManager (created with Project) 
+	b. Add Member Function const char *GetComment()	{ return "hello from MxPluginManager"; }
+	c. Rename as MxPluginManager (both .h and .cpp)
+4. Select Project in Solution Explorer Window, right click | Properties
+	a. Configuration = ALL
+		i.   C/C++, General, Addition Include Directories = $(SolutionDir)..\PublicInterfaces
+		ii.  Linker, additonal lib directories = $(SolutionDir)..\ThirdPartyLibs
+		iii. Build Events, Post-build,
+			   xcopy /y "$(OutDir)$(TargetName).lib" "$(SolutionDir)..\ThirdPartyLibs\"
+	b. Configuration = Release
+		i.   General, TargetName = MxPluginMngr1
+		ii.  Linker, input = MxUtils1.lib
+		iii. Build Events, Pre-build,
+				xcopy /y "$(SolutionDir)..\MxUtils\Release\MxUtils1.dll" "$(OutDir)" 
+	c. Configuration  = Debug
+		i.   General, TargetName = MxPluginMngr1D	
+		ii.  Linker, input = MxUtils1D.lib
+		iii. Build Events, Pre-build,
+				xcopy /y "$(SolutionDir)..\MxUtils\Debug\MxUtils1D.dll" "$(OutDir)" 
+
+C. Create MxPluginManagerApp
+============================
+1. File | New Project - Other Languages, Visual C++, Win32 Console App
+	a. Name = MxPluginManagerApp
+	b. Solution = Add to Solution
+	c. Welcome (next)
+	d. App Settings = Type is console app
+2. Select Project in Solution Explorer Window, right click | Properties
+	a. Configuration  = all Configurations
+		i.   C/C++, General, Additional Include Directories = $(SolutionDir)MxPluginManager;$(SolutionDir)..\PublicInterfaces
+	b. Configuration  = Debug
+		i.   Linker, General, Additional Library Directories = $(SolutionDir)..\ThirdPartyLibs;$(SolutionDir)Debug;
+		ii.  Linker, Input, Additional Dependencies = MxUtils1D.lib;MxPluginMngr1D.lib	
+	c. Configuration  = Release
+		i.   Linker, General, Additional Library Directories = $(SolutionDir)..\ThirdPartyLibs;$(SolutionDir)Release;
+		ii.  Linker, Input, Additional Dependencies = MxUtils1.lib;MxPluginMngr1.lib
+3. Select Project in Solution Explorer Window, right click | Project Dependencies
+	a. 	Depends upon MxPluginManager 
+4. Select Project in Solution Explorer Window, right click | Set as Startup Project
+5. Edit MxPluginManagerApp.cpp
+
+		#include "stdafx.h"
+		#include <stdlib.h>
+		#include <iostream>
+		#include <string>
+		#include "MxPluginManager1.h"
+
+
+		int main(int argc, char* argv[])
+		{
+			std::cout << "MxPluginManagerApp v1.0.0.0 - program starts" << std::endl;
+	
+			MxPluginManager lib;
+			std::cout << lib.GetComment();
+
+			std::cout << "MxPluginManagerApp - program ends" << std::endl;
+			return 0;
+		}
+
+D. Create MxPluginManagerTest
+=============================
+ 1. File | New Project - Other Languages, Visual C++, Test, Native Unit Test Project
+	a. Name = MxPluginManagerTest
+	b. Solution = Add to Solution
+2. Select Project in Solution Explorer Window, right click | Properties
+	a. Configuration  = all Configurations
+		i. C/C++, General, Additional Include Directories = $(SolutionDir)MxPluginManager;$(SolutionDir)..\PublicInterfaces
+		ii. Linker, Input, Additional Dependencies = MxPluginMngr1.lib	
+	b. Configuration  = Debug
+		i. Linker, General, Additional Library Directories = $(SolutionDir)Debug	
+		ii. Linker, Input, Additional Dependencies = MxPluginMngr1D.lib	 
+	c. Configuration  = Release
+		i. Linker, General, Additional Library Directories = $(SolutionDir)Release
+		ii. Linker, General, Incremental Linking :(/INCREMENTAL:NO)  (avoid LINK warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification)
+
+3. Select Project in Solution Explorer Window, right click | Project Dependencies
+	a. 	Depends upon MxPluginManager
+4. Rename Unittest1.cpp to MxPluginManagerTest.cpp and edit the file 
+
+		#include "stdafx.h"
+		#include "CppUnitTest.h"
+		#include "PluginICFnLibUKCTOCS.h"
+
+		using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+		namespace PluginICFnLibUKCTOCSTest
+		{		
+			TEST_CLASS(PluginICFnLibUKCTOCSTest)
+			{
+				PluginICFnLibUKCTOCS *_pluginICFnLibUKCTOCS;
+
+			public:
+				TEST_METHOD_INITIALIZE(InitPluginICFnLibUKCTOCS)
+				{
+					_pluginICFnLibUKCTOCS = new PluginICFnLibUKCTOCS();
+				}
+
+				TEST_METHOD_CLEANUP(DeinitPluginICFnLibUKCTOCS)
+				{
+					if (_pluginICFnLibUKCTOCS != 0)
+						delete _pluginICFnLibUKCTOCS;
+					_pluginICFnLibUKCTOCS = 0;
+				}
+		
+				TEST_METHOD(CreatePluginICExpt)
+				{
+					Assert::IsNotNull(_pluginICFnLibUKCTOCS);
+				}
+
+			};
+		}
+
+
+E. Provide Version Information
+==============================
+
+1. Select MxPluginManager Project in Resource View Window, right click | Add - Resource - Version, New
+	a. Use the Version Editor to provide values for:
+		FILEVERSION
+		PRODUCTVERSION
+		CompanyName - Developer of lib
+		FileDescription - Description of lib
+		InternalName - GUID to identify the lib - see MxProductID.h - PRODID_MxPluginManager  
+		LegalCopyright - copyright message
+		OriginalFilename - MxPluginManager.dll
+		ProductName - MxPluginManager
+
+2. Select MxPluginManagerApp Project in Resource View Window, right click | Add - Resource - Version, New
+	a. Use the Version Editor to provide values for:
+		FILEVERSION
+		PRODUCTVERSION
+		CompanyName - Developer of lib
+		FileDescription - Description of lib
+		InternalName - GUID to identify the lib - see MxProductID.h - PRODID_MxPluginManagerApp  
+		LegalCopyright - copyright message
+		OriginalFilename - MxPluginManager.dll
+		ProductName - MxPluginManager
+
+2. Select MxPluginManagerGUI Project in Resource View Window, right click | Add - Resource - Version, New
+	a. Use the Version Editor to provide values for:
+		FILEVERSION
+		PRODUCTVERSION
+		CompanyName - Developer of lib
+		FileDescription - Description of lib
+		InternalName - GUID to identify the lib - see MxProductID.h - PRODID_MxPluginManagerGUI  
+		LegalCopyright - copyright message
+		OriginalFilename - MxPluginManager.dll
+		ProductName - MxPluginManager
+
+
+3. Read Version information from DLL 
+	a. Add new class LibInfo - select MxPluginManager Project in Solution Explorer Window, right click | Add - Class
+	b. Edit LibInfo.h
+	
+#pragma once
+
+#include "MxUtils\MxVersionInfo1.h"
+
+#ifdef MXPLUGINMANAGER_EXPORTS
+#define MXPLUGINMANAGER_API __declspec(dllexport)
+#else
+#define MXPLUGINMANAGER_API __declspec(dllimport)
+#endif
+
+class MXPLUGINMANAGER_API LibInfo
+{
+public:
+
+	bool		SetVersionInfo( HMODULE hModule = NULL) { return _VersionInfo.SetVersionInfo(hModule); }
+
+	const wchar_t *GetwPathFilename() { return _VersionInfo.GetwPathFilename(); }		//filename returned by ::GetModuleFileName() of hModule in DllMain, DLL_PROCESS_ATTACH
+	const char *GetProductName() {  return _VersionInfo.GetProductName(); }				//VS_VERSION_INFO::ProductName
+	const char *GetDescription() {  return _VersionInfo.GetDescription();  }			//VS_VERSION_INFO::FileDescription
+	const char *GetVersion() {  return _VersionInfo.GetVersion();  }					//VS_VERSION_INFO::ProductVersion
+	const char *GetOwner() {  return _VersionInfo.GetOwner(); }							//VS_VERSION_INFO::CompanyName	
+	const char *GetCopyrightNotice() {  return _VersionInfo.GetCopyrightNotice(); }		//VS_VERSION_INFO::LegalCopyright
+	const char *GetProductID() {    return _VersionInfo.GetProductID(); }				//VS_VERSION_INFO::InternalName GUID - for a MxPlugin this is same as its folder name in PluginRootFolder	
+
+
+	static LibInfo& Inst()
+	{
+		static LibInfo    instance;			// Guaranteed to be destroyed. Instantiated on first use.
+		return instance;
+	}
+
+private:
+	LibInfo();
+	~LibInfo();
+    LibInfo(LibInfo const&);					// Don't Implement
+    void operator=(LibInfo const&);			// Don't implement
+
+	MxVersionInfo _VersionInfo;
+};
+
+
+	c. Edit dllmain.cpp
+
+
+#include "LibInfo.h"
+
+BOOL APIENTRY DllMain( HMODULE hModule,
+                       DWORD  ul_reason_for_call,
+                       LPVOID lpReserved
+					 )
+{
+	switch (ul_reason_for_call)
+	{
+		case DLL_PROCESS_ATTACH:
+		{
+			LibInfo::Inst().SetVersionInfo(hModule);
+		}
+		break;
+		case DLL_THREAD_ATTACH:
+		case DLL_THREAD_DETACH:
+		case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
+}
+
+4. Confirm all is well (both debug and release configuration)
+
+	a. Build | Rebuild Solution - no errors, no warnings
+
+	b. Debug | Run without Debugging - no errors, no warnings no leaks
+
+	c. Test | Windows | Test Explorer, Run All - all pass
+
+	d. Analyze | run Code Analysis on Solution - no analysis issues detected
+
+	e. Resharpener | Inspect | Code Issues in Solution - none found
+
+	f. Tools | Intel Inspector XE 2013
+		a.  Build using Intel compiler (Project | Intel Composer XE 2013 | Use Intel C++)
+		b.  Create a folder to save analysis results as a baseline 
+		d.  Memory Error Analysis / Locate Memory Problems - kernel resource leak may be found in UMEngx86.dll (symantec problem) or MFC libs (microsoft problem)
+		e.  Threading Error Analysis / Locate Deadlock and Data Races - none found
+		f.  Memory Error Analysis / Detect Leaks - none found
+
+	g. Build | Build Solution for Intel Static Analysis - no problems detected
+
+

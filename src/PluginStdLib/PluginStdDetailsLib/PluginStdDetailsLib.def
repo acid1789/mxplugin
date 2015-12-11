@@ -1,0 +1,4 @@
+LIBRARY   PLUGINSTDLIB
+EXPORTS
+	CreateClassInstance   @1
+	 
